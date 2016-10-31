@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Sigma
 {
@@ -178,6 +176,7 @@ namespace Sigma
             return split;
         }
 
+        /* Disabled due to use of Sigma in Android application.
         /// <summary>
         /// Search a string with the given pattern.
         /// </summary>
@@ -187,7 +186,7 @@ namespace Sigma
             // to yield a very simple search.
             if (searchString.Any()) return Operators.LikeString(str, $"*{searchString}*", CompareMethod.Text);
             return true;
-        }
+        }*/
     }
 
     /// <summary>
