@@ -11,19 +11,32 @@ namespace Sigma
     /// </summary>
     public enum SymbolTag
     {
-        [Union(typeof(ImmutableList<Symbol>))] Symbols = 0,
+        [Union(typeof(string))] Atom = 0,
+        [Union(typeof(string))] Number,
+        [Union(typeof(string))] String,
         [Union(typeof(string))] Quote,
-        [Union(typeof(string))] Atom
+        [Union(typeof(ImmutableList<Symbol>))] Symbols
     }
+
+    /// Type specifier for Number.
+    public class NumberSpecifier : Tuple<string> { public NumberSpecifier(string number) : base(number) { } }
+
+    /// Type specifier for String.
+    public class StringSpecifier : Tuple<string> { public StringSpecifier(string str) : base(str) { } }
+
+    /// Type specifier for Quote.
+    public class QuoteSpecifier : Tuple<string> { public QuoteSpecifier(string quote) : base(quote) { } }
 
     /// <summary>
     /// A generalized representation of all possible values.
     /// </summary>
     public class Symbol : Union<SymbolTag, object>, IEquatable<Symbol>
     {
-        public Symbol(IEnumerable<Symbol> symbols) : base(SymbolTag.Symbols, symbols.ToImmutableList()) { }
-        public Symbol(Tuple<string> quote) : base(SymbolTag.Quote, quote.Item1) { }
         public Symbol(string atom) : base(SymbolTag.Atom, atom) { }
+        public Symbol(NumberSpecifier number) : base(SymbolTag.Number, number.Item1) { }
+        public Symbol(StringSpecifier str) : base(SymbolTag.String, str.Item1) { }
+        public Symbol(QuoteSpecifier quote) : base(SymbolTag.Quote, quote.Item1) { }
+        public Symbol(IEnumerable<Symbol> symbols) : base(SymbolTag.Symbols, symbols.ToImmutableList()) { }
         public Symbol(SymbolTag tag, object data) : base(tag, data) { }
 
         public ImmutableList<Symbol> AsSymbols
@@ -44,6 +57,24 @@ namespace Sigma
             }
         }
 
+        public string AsString
+        {
+            get
+            {
+                if (Tag != SymbolTag.String) throw new InvalidOperationException();
+                return (string)Data;
+            }
+        }
+
+        public string AsNumber
+        {
+            get
+            {
+                if (Tag != SymbolTag.Number) throw new InvalidOperationException();
+                return (string)Data;
+            }
+        }
+
         public string AsAtom
         {
             get
@@ -59,9 +90,11 @@ namespace Sigma
             if (Tag != other.Tag) return false;
             switch (Tag)
             {
-                case SymbolTag.Symbols: return AsSymbols.SequenceEqual(other.AsSymbols);
-                case SymbolTag.Quote: return AsQuote == other.AsQuote;
                 case SymbolTag.Atom: return AsAtom == other.AsAtom;
+                case SymbolTag.Number: return AsNumber == other.AsNumber;
+                case SymbolTag.String: return AsString == other.AsString;
+                case SymbolTag.Quote: return AsQuote == other.AsQuote;
+                case SymbolTag.Symbols: return AsSymbols.SequenceEqual(other.AsSymbols);
                 default: throw new InexhausiveException();
             }
         }
@@ -76,9 +109,11 @@ namespace Sigma
         {
             switch (Tag)
             {
-                case SymbolTag.Symbols: return AsSymbols.Aggregate(0, (hash, symbol) => hash ^ symbol.GetHashCode());
-                case SymbolTag.Quote: return AsQuote.GetHashCode();
                 case SymbolTag.Atom: return AsAtom.GetHashCode();
+                case SymbolTag.Number: return AsNumber.GetHashCode();
+                case SymbolTag.String: return AsString.GetHashCode();
+                case SymbolTag.Quote: return AsQuote.GetHashCode();
+                case SymbolTag.Symbols: return AsSymbols.Aggregate(0, (hash, symbol) => hash ^ symbol.GetHashCode());
                 default: throw new InexhausiveException();
             }
         }
@@ -92,35 +127,91 @@ namespace Sigma
         {
             return SymbolParser.ParseSymbol(sexpr);
         }
+
+        public T Match<T>(
+            Func<string, T> onAtom,
+            Func<string, T> onNumber,
+            Func<string, T> onString,
+            Func<string, T> onQuote,
+            Func<ImmutableList<Symbol>, T> onSymbols)
+        {
+            switch (Tag)
+            {
+                case SymbolTag.Atom: return onAtom(AsAtom);
+                case SymbolTag.Number: return onNumber(AsNumber);
+                case SymbolTag.String: return onString(AsString);
+                case SymbolTag.Quote: return onQuote(AsQuote);
+                case SymbolTag.Symbols: return onSymbols(AsSymbols);
+                default: throw new InexhausiveException();
+            }
+        }
+
+        public T Match4<T>(
+            Func<string, T> onAtom,
+            Func<string, T> onString,
+            Func<string, T> onNumber,
+            Func<ImmutableList<Symbol>, T> onSymbols)
+        {
+            return Match(
+                onAtom,
+                onNumber,
+                onString,
+                quote => Expression<T>.Throw<InexhausiveException>(),
+                onSymbols);
+        }
+
+        public T Match3<T>(
+            Func<string, T> onAtom,
+            Func<string, T> onQuote,
+            Func<ImmutableList<Symbol>, T> onSymbols)
+        {
+            return Match(
+                onAtom,
+                number => Expression<T>.Throw<InexhausiveException>(),
+                str => Expression<T>.Throw<InexhausiveException>(),
+                onQuote,
+                onSymbols);
+        }
+
+        public T Match2<T>(
+            Func<string, T> onAtom,
+            Func<ImmutableList<Symbol>, T> onSymbols)
+        {
+            return Match(
+                onAtom,
+                number => Expression<T>.Throw<InexhausiveException>(),
+                str => Expression<T>.Throw<InexhausiveException>(),
+                quote => Expression<T>.Throw<InexhausiveException>(),
+                onSymbols);
+        }
     }
 
     /// <summary>
-    /// Parses and unparses Symbols from / to strings. Example strings include:
+    /// Convert strings and symbols, with the following parses:
     /// 
-    /// /* Atom values */
-    /// 
-    /// 0
+    /// (* Atom values *)
     /// None
-    /// Hello_World
     /// CharacterAnimationFacing
-    /// "String with quoted spaces."
-    /// String_with_underscores_for_spaces.
     /// 
-    /// /* Quote values */
-    /// 
-    /// `True'
-    /// `[Some 1.0]'
-    /// 
-    /// /* Symbols values */
+    /// (* Number values *)
+    /// 0.0f
+    /// -5
     ///
+    /// (* String value *)
+    /// "String with quoted spaces."
+    ///
+    /// (* Quoted value *)
+    /// `[Some 1]'
+    /// 
+    /// (* Symbols values *)
     /// []
     /// [Some 0]
     /// [Left 0]
     /// [[0 1] [2 4]]
     /// [AnimationData 4 8]
-    /// [Gem `[Some 12]']
-    /// 
-    /// NOTE: Quotes currently do not recurse.
+    /// [Gem `[Some 1]']
+    ///
+    /// ...and so on.
     /// </summary>
     public static class SymbolParser
     {
@@ -152,13 +243,18 @@ namespace Sigma
             from _ in ReadWhitespaces
             select new Symbol(chars);
 
-        public static Parser<Symbol> ReadAtomAsString =
+        public static Parser<Symbol> ReadNumber =
+            from chars in Parse.Number
+            from _ in ReadWhitespaces
+            select new Symbol(new NumberSpecifier(chars));
+
+        public static Parser<Symbol> ReadString =
             from _ in Parse.Char(OpenStringChar)
             from _2 in ReadWhitespaces
             from chars in ReadStringChars
             from _3 in Parse.Char(CloseStringChar)
             from _4 in ReadWhitespaces
-            select new Symbol(chars);
+            select new Symbol(new StringSpecifier(chars));
 
         public static Parser<Symbol> ReadQuote =
             from _ in Parse.Char(OpenQuoteChar)
@@ -166,7 +262,7 @@ namespace Sigma
             from chars in ReadQuoteChars
             from _3 in Parse.Char(CloseQuoteChar)
             from _4 in ReadWhitespaces
-            select new Symbol(Tuple.Create(chars));
+            select new Symbol(new QuoteSpecifier(chars));
 
         public static Parser<Symbol> ReadSymbols =
             from _ in Parse.Char(OpenSymbolsChar)
@@ -177,10 +273,11 @@ namespace Sigma
             select new Symbol(symbols.ToImmutableList());
 
         public static Parser<Symbol> ReadSymbol =
-            ReadAtomAsString.Or(
             ReadQuote.Or(
+            ReadString.Or(
+            ReadNumber.Or(
             ReadAtom.Or(
-            ReadSymbols)));
+            ReadSymbols))));
 
         public static Symbol ParseSymbol(string sexpr)
         {
@@ -189,6 +286,11 @@ namespace Sigma
                  from symbol in ReadSymbol
                  select symbol)
                 .Parse(sexpr);
+        }
+
+        public static string Distillate(string str)
+        {
+            return str.Remove(OpenStringChar).Remove(CloseStringChar);
         }
 
         public static bool IsExplicit(string content)
@@ -203,15 +305,26 @@ namespace Sigma
 
         private static string WriteAtom(string content)
         {
-            if (content.IsEmpty()) return $"{OpenStringChar}{CloseStringChar}";
-            if (!IsExplicit(content) && ShouldBeExplicit(content)) return $"{OpenStringChar}{content}{CloseStringChar}";
-            if (IsExplicit(content) && !ShouldBeExplicit(content)) return content.Substring(1, content.Length - 2);
-            return content;
+            var distilled = Distillate(content);
+            if (distilled.IsEmpty()) return $"{OpenStringChar}{CloseStringChar}";
+            if (!IsExplicit(distilled) && ShouldBeExplicit(distilled)) return $"{OpenStringChar}{distilled}{CloseStringChar}";
+            if (IsExplicit(distilled) && !ShouldBeExplicit(distilled)) return content.Substring(1, content.Length - 2);
+            return distilled;
+        }
+
+        private static string WriteNumber(string content)
+        {
+            return Distillate(content);
+        }
+
+        private static string WriteString(string content)
+        {
+            return $"{OpenStringChar}{Distillate(content)}{CloseStringChar}";
         }
 
         private static string WriteQuote(string content)
         {
-            return $"{OpenQuoteChar}{content}{CloseQuoteChar}";
+            return $"{OpenQuoteChar}{Distillate(content)}{CloseQuoteChar}";
         }
 
         private static string WriteSymbols(ImmutableList<Symbol> symbols)
@@ -221,13 +334,12 @@ namespace Sigma
 
         public static string WriteSymbol(Symbol symbol)
         {
-            switch (symbol.Tag)
-            {
-                case SymbolTag.Symbols: return WriteSymbols((ImmutableList<Symbol>)symbol.Data);
-                case SymbolTag.Quote: return WriteQuote((string)symbol.Data);
-                case SymbolTag.Atom: return WriteAtom((string)symbol.Data);
-                default: throw new InexhausiveException();
-            }
+            return symbol.Match(
+                atom => WriteAtom(atom),
+                number => WriteNumber(number),
+                str => WriteString(str),
+                quote => WriteQuote(quote),
+                symbols => WriteSymbols(symbols));
         }
 
         public static string UnparseSymbol(Symbol symbol)

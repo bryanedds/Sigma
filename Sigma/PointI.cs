@@ -67,7 +67,7 @@ namespace Sigma
                 try
                 {
                     var fields = symbol.AsSymbols;
-                    var ints = fields.Select(field => int.Parse(field.AsAtom)).ToArray();
+                    var ints = fields.Select(field => int.Parse(field.AsNumber)).ToArray();
                     return new PointI(ints[0], ints[0]);
                 }
                 catch (Exception exn)
@@ -95,8 +95,8 @@ namespace Sigma
                 var point = (PointI)value;
                 return
                     new Symbol(new List<Symbol> {
-                        new Symbol(point.X.ToString()),
-                        new Symbol(point.Y.ToString()) });
+                        new Symbol(new NumberSpecifier(point.X.ToString())),
+                        new Symbol(new NumberSpecifier(point.Y.ToString())) });
             }
             return base.ConvertTo(context, culture, value, destinationType);
         }

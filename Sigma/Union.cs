@@ -98,7 +98,12 @@ namespace Sigma
                     var tag = (Enum)tagConverter.ConvertFromString(fields[0].AsAtom);
                     var dataField = pointType.GetField(nameof(Union<bool, bool>.Data));
                     var dataConverter = TypeDescriptor.GetConverter(tag.TryGetAttributeOfType<UnionAttribute>().TryThen(attr => attr.Type) ?? dataField.FieldType);
-                    var data = fields[1].Tag == SymbolTag.Atom ? dataConverter.ConvertFromString(fields[1].AsAtom) : dataConverter.ConvertFrom(fields[1]);
+                    var data = fields[1].Match(
+                        atom => dataConverter.ConvertFromString(atom),
+                        number => dataConverter.ConvertFromString(number),
+                        str => dataConverter.ConvertFromString(str),
+                        _ => fields[1],
+                        _ => dataConverter.ConvertFrom(fields[1]));
                     return Activator.CreateInstance(pointType, new object[] { tag, data });
                 }
                 catch (Exception exn)

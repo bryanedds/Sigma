@@ -26,13 +26,12 @@ namespace Sigma
 
         public static bool Run(List<KeyValuePair<string, string>> strings, Symbol search)
         {
-            switch (search.Tag)
-            {
-                case SymbolTag.Symbols: return Run(strings, search.AsSymbols);
-                case SymbolTag.Quote: throw new InexhausiveException(); // quotes aren't used
-                case SymbolTag.Atom: return strings.Any(entry => entry.Value.Search(search.AsAtom));
-                default: throw new InexhausiveException();
-            }
+            return search.Match(
+                atom => strings.Any(entry => entry.Value.Search(atom)),
+                number => Expression<bool>.Throw<InexhausiveException>(), // numbers aren't used
+                str => strings.Any(entry => entry.Value.Search(str)),
+                quote => Expression<bool>.Throw<InexhausiveException>(), // quotes aren't used
+                symbols => Run(strings, symbols));
         }
 
         private static bool Run(List<KeyValuePair<string, string>> entries, ImmutableList<Symbol> searches)
@@ -68,8 +67,6 @@ namespace Sigma
         public static char SeparatorChar = ':';
         public static char OpenStringChar = '\"';
         public static char CloseStringChar = '\"';
-        public static char OpenQuoteChar = '`';
-        public static char CloseQuoteChar = '\'';
         public static string NewlineChars = "\n\r";
         public static string WhitespaceChars = " \t" + NewlineChars;
         public static string StructureCharsNoStr = ":";
@@ -81,28 +78,25 @@ namespace Sigma
         public static Parser<string> ReadIdentifierChars =
             Parse.CharExcept(StructureChars + WhitespaceChars).AtLeastOnce().Text();
 
-        public static Parser<string> ReadStringChars =
+        public static Parser<string> ReadLiteralChars =
             Parse.CharExcept(CloseStringChar).Many().Text();
-
-        public static Parser<string> ReadQuoteChars =
-            Parse.CharExcept(CloseQuoteChar).Many().Text();
 
         public static Parser<Symbol> ReadIdentifier =
             from chars in ReadIdentifierChars
             from _ in ReadWhitespaces
             select new Symbol(chars);
 
-        public static Parser<Symbol> ReadIdentifierQuoted =
+        public static Parser<Symbol> ReadLiteral =
             from _ in Parse.Char(OpenStringChar)
             from _2 in ReadWhitespaces
-            from chars in ReadStringChars
+            from chars in ReadLiteralChars
             from _3 in Parse.Char(CloseStringChar)
             from _4 in ReadWhitespaces
             select new Symbol(chars);
 
         public static Parser<Symbol> ReadTerm =
-            ReadIdentifier
-            .Or(ReadIdentifierQuoted)
+            ReadLiteral
+            .Or(ReadIdentifier)
             .Where(term => term.AsAtom.IndexOf("Or", 0, StringComparison.CurrentCultureIgnoreCase) == -1);
 
         public static Parser<Symbol> ReadKeyValue =

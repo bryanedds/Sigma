@@ -124,7 +124,13 @@ namespace Sigma
                             var fieldName = "Item" + (index + 1);
                             var fieldProperty = pointType.GetProperty(fieldName, BindingFlags.Public | BindingFlags.Instance);
                             var fieldConverter = TypeDescriptor.GetConverter(fieldProperty.PropertyType);
-                            return fieldSymbol.Tag == SymbolTag.Atom ? fieldConverter.ConvertFromString(fieldSymbol.AsAtom) : fieldConverter.ConvertFrom(fieldSymbol); })
+                            var fieldValue = fieldSymbol.Match(
+                                atom => fieldConverter.ConvertFromString(atom),
+                                number => fieldConverter.ConvertFromString(number),
+                                str => fieldConverter.ConvertFromString(str),
+                                _ => fieldSymbol,
+                                _ => fieldConverter.ConvertFrom(fieldSymbol));
+                            return fieldValue; })
                         .ToArray();
                     return Activator.CreateInstance(pointType, fields);
                 }
