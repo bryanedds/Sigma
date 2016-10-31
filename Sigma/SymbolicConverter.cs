@@ -36,7 +36,7 @@ namespace Sigma
                 if (sourceType == typeof(string))
                 {
                     var sourceStr = source.ToString();
-                    if (SymbolParser.IsNumber(sourceStr)) return new Symbol(new NumberSpecifier(sourceStr));
+                    //if (SymbolParser.IsNumber(sourceStr)) return new Symbol(new NumberSpecifier(sourceStr));
                     if (SymbolParser.ShouldBeExplicit(sourceStr)) return new Symbol(new StringSpecifier(sourceStr));
                     return new Symbol(sourceStr);
                 }
@@ -63,6 +63,53 @@ namespace Sigma
 
                 return new Symbol((string)typeConverter.ConvertTo(source, typeof(string)));
             }
+        }
+
+        private static object FromSymbol(Type destType, Symbol symbol)
+        {
+            // desymbolize .NET primitive
+            if (destType.IsPrimitive)
+            {
+                return symbol.Match(
+                    atom => TypeDescriptor.GetConverter(destType).ConvertFromString(atom),
+                    number => TypeDescriptor.GetConverter(destType).ConvertFromString(number),
+                    str => TypeDescriptor.GetConverter(destType).ConvertFromString(str),
+                    quote => Expression<object>.Throw<ConversionException>(),
+                    symbols => Expression<object>.Throw<ConversionException>());
+            }
+
+            // desymbolize string
+            if (destType == typeof(string))
+            {
+                return symbol.Match(
+                    atom => SymbolParser.IsExplicit(atom) ? (object)atom.Substring(1, atom.Length - 2) : (object)atom,
+                    number => (object)number,
+                    str => (object)str,
+                    quote => Expression<object>.Throw<ConversionException>(),
+                    symbols => Expression<object>.Throw<ConversionException>());
+            }
+
+            // desymbolize Symbol (no tranformation)
+            if (destType == typeof(Symbol))
+            {
+                return (object)symbol;
+            }
+
+            var optTypeConverter = destType.TryGetCustomTypeConverter();
+            if (optTypeConverter != null)
+            {
+                // desymbolize user-defined type
+                if (optTypeConverter.CanConvertFrom(typeof(Symbol))) return optTypeConverter.ConvertFrom(symbol);
+                throw new ConversionException("Expected ability to convert from Symbol for custom type converter '" + optTypeConverter.GetType().Name + "'.");
+            }
+
+            // desymbolize vanilla .NET type
+            return symbol.Match(
+                atom => TypeDescriptor.GetConverter(destType).ConvertFromString(atom),
+                number => TypeDescriptor.GetConverter(destType).ConvertFromString(number),
+                str => TypeDescriptor.GetConverter(destType).ConvertFromString(str),
+                quote => Expression<object>.Throw<ConversionException>(),
+                symbols => Expression<object>.Throw<ConversionException>());
         }
 
         private readonly Type pointType;
