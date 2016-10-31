@@ -65,7 +65,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Record.cs" />
+    <Compile Include="Ref.cs" />
+    <Compile Include="Reflection.cs" />
     <Compile Include="Symbol.cs" />
+    <Compile Include="SymbolicConverter.cs" />
     <Compile Include="TimeRange.cs" />
     <Compile Include="Union.cs" />
     <Compile Include="Unit.cs" />

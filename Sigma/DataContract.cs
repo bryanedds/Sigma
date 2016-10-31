@@ -122,6 +122,7 @@ namespace Sigma
         private readonly HashSet<Type> registeredTypes = new HashSet<Type>();
         #endregion
     }
+
     /// <summary>
     /// Type Converter Contract functions.
     /// </summary>

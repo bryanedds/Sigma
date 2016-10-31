@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -241,5 +242,23 @@ namespace Sigma
     public class StringWriterUtf8 : StringWriter
     {
         public override Encoding Encoding { get { return Encoding.UTF8; } }
+    }
+
+    /// <summary>
+    /// Converts strings, values, and symbols.
+    /// </summary>
+    public static class Conversion
+    {
+        public static string ValueToString<T>(T value)
+        {
+            var converter = TypeDescriptor.GetConverter(typeof(T));
+            return converter.ConvertToString(value);
+        }
+
+        public static T StringToValue<T>(string str)
+        {
+            var converter = TypeDescriptor.GetConverter(typeof(T));
+            return (T)converter.ConvertFromString(str);
+        }
     }
 }
