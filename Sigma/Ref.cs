@@ -29,17 +29,6 @@ namespace Sigma
     }
 
     /// <summary>
-    /// Ref functions.
-    /// </summary>
-    public static class Ref
-    {
-        public static Ref<T> Create<T>(T value)
-        {
-            return new Ref<T>(value);
-        }
-    }
-
-    /// <summary>
     /// Type converter for Refs.
     /// </summary>
     public class RefConverter : TypeConverter

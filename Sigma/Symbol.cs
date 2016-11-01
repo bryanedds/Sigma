@@ -290,7 +290,9 @@ namespace Sigma
 
         public static string Distillate(string str)
         {
-            return str.Remove(OpenStringChar).Remove(CloseStringChar);
+            return str
+                .Replace(OpenStringChar.ToString(), string.Empty)
+                .Replace(CloseStringChar.ToString(), string.Empty);
         }
 
         public static bool IsExplicit(string content)
@@ -317,7 +319,7 @@ namespace Sigma
             var distilled = Distillate(content);
             if (distilled.IsEmpty()) return $"{OpenStringChar}{CloseStringChar}";
             if (!IsExplicit(distilled) && ShouldBeExplicit(distilled)) return $"{OpenStringChar}{distilled}{CloseStringChar}";
-            if (IsExplicit(distilled) && !ShouldBeExplicit(distilled)) return content.Substring(1, content.Length - 2);
+            if (IsExplicit(distilled) && !ShouldBeExplicit(distilled)) return distilled.Substring(1, distilled.Length - 2);
             return distilled;
         }
 

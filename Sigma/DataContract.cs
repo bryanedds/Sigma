@@ -124,20 +124,6 @@ namespace Sigma
     }
 
     /// <summary>
-    /// Type Converter Contract functions.
-    /// </summary>
-    public static class Tcc
-    {
-        /// <summary>
-        /// Create a Tcc instance using the given value.
-        /// </summary>
-        public static Tcc<T> Create<T>(T value)
-        {
-            return new Tcc<T>(value);
-        }
-    }
-
-    /// <summary>
     /// Tcc - Type Converter Contract. Used to implement a DataContract for type T using just T's type converter.
     /// </summary>
     [DataContract, TypeConverter(typeof(TccConverter))]
