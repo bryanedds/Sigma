@@ -56,8 +56,7 @@ namespace Sigma
 
         public override string ToString()
         {
-            var unionConverter = TypeDescriptor.GetConverter(this);
-            return unionConverter.ConvertToString(this);
+            return Conversion.ValueToString(this);
         }
 
         public readonly T Tag;
@@ -94,10 +93,10 @@ namespace Sigma
                 {
                     var fields = symbol.AsSymbols;
                     var tagField = pointType.GetField(nameof(Union<bool, bool>.Tag));
-                    var tagConverter = TypeDescriptor.GetConverter(tagField.FieldType);
+                    var tagConverter = new SymbolicConverter(tagField.FieldType);
                     var tag = (Enum)tagConverter.ConvertFromString(fields[0].AsAtom);
                     var dataField = pointType.GetField(nameof(Union<bool, bool>.Data));
-                    var dataConverter = TypeDescriptor.GetConverter(tag.TryGetAttributeOfType<UnionAttribute>().TryThen(attr => attr.Type) ?? dataField.FieldType);
+                    var dataConverter = new SymbolicConverter(tag.TryGetAttributeOfType<UnionAttribute>().TryThen(attr => attr.Type) ?? dataField.FieldType);
                     var data = fields[1].Match(
                         atom => dataConverter.ConvertFromString(atom),
                         number => dataConverter.ConvertFromString(number),
@@ -130,11 +129,11 @@ namespace Sigma
             {
                 var tagField = pointType.GetField(nameof(Union<bool, bool>.Tag));
                 var tag = (Enum)tagField.GetValue(value);
-                var tagConverter = TypeDescriptor.GetConverter(tagField.FieldType);
+                var tagConverter = new SymbolicConverter(tagField.FieldType);
                 var tagSymbol = new Symbol(tagConverter.ConvertToString(tag));
                 var dataField = pointType.GetField(nameof(Union<bool, bool>.Data));
                 var data = dataField.GetValue(value);
-                var dataConverter = TypeDescriptor.GetConverter(tag.TryGetAttributeOfType<UnionAttribute>().TryThen(attr => attr.Type) ?? dataField.FieldType);
+                var dataConverter = new SymbolicConverter(tag.TryGetAttributeOfType<UnionAttribute>().TryThen(attr => attr.Type) ?? dataField.FieldType);
                 var dataSymbol = dataConverter.CanConvertTo(typeof(Symbol)) ? (Symbol)dataConverter.ConvertTo(data, typeof(Symbol)) : new Symbol(dataConverter.ConvertToString(data));
                 return new Symbol(new List<Symbol>() { tagSymbol, dataSymbol });
             }

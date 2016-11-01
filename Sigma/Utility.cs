@@ -251,13 +251,13 @@ namespace Sigma
     {
         public static string ValueToString<T>(T value)
         {
-            var converter = TypeDescriptor.GetConverter(typeof(T));
+            var converter = new SymbolicConverter(typeof(T));
             return converter.ConvertToString(value);
         }
 
         public static T StringToValue<T>(string str)
         {
-            var converter = TypeDescriptor.GetConverter(typeof(T));
+            var converter = new SymbolicConverter(typeof(T));
             return (T)converter.ConvertFromString(str);
         }
     }

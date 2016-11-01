@@ -298,6 +298,15 @@ namespace Sigma
             return content.StartsWith(OpenStringChar.ToString()) && content.EndsWith(CloseStringChar.ToString());
         }
 
+        public static bool IsNumber(string content)
+        {
+            return
+                (from chars in Parse.Number
+                 select chars)
+                 .TryParse(content)
+                 .WasSuccessful;
+        }
+
         public static bool ShouldBeExplicit(string content)
         {
             return content.Any(chr => char.IsWhiteSpace(chr) || StructureCharsNoStr.Contains(chr));

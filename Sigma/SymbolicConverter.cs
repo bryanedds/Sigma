@@ -18,7 +18,7 @@ namespace Sigma
             {
                 // symbolize user-defined type
                 if (!optTypeConverter.CanConvertTo(typeof(Symbol)))
-                    throw new ConversionException("Cannot convert type '" + source.GetType().Name + "' to Sigma.Symbol.");
+                    throw new ConversionException("Cannot convert type '" + source.GetType().Name + "' to Symbol.");
                 else
                     return (Symbol)optTypeConverter.ConvertTo(source, typeof(Symbol));
             }
@@ -37,7 +37,7 @@ namespace Sigma
                 if (sourceType == typeof(string))
                 {
                     var sourceStr = source.ToString();
-                    //if (SymbolParser.IsNumber(sourceStr)) return new Symbol(new NumberSpecifier(sourceStr));
+                    if (SymbolParser.IsNumber(sourceStr)) return new Symbol(new NumberSpecifier(sourceStr));
                     if (SymbolParser.ShouldBeExplicit(sourceStr)) return new Symbol(new StringSpecifier(sourceStr));
                     return new Symbol(sourceStr);
                 }

@@ -11,7 +11,7 @@ namespace Sigma
     public class Unit
     {
         public static readonly Unit Value = new Unit();
-        public override string ToString() { return TypeDescriptor.GetConverter(this).ConvertToString(this); }
+        public override string ToString() { return Conversion.ValueToString(this); }
         private Unit() { }
     }
 
