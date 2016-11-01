@@ -74,14 +74,14 @@ namespace Sigma
             return 0;
         }
 
+        /* Disabled due to use of Sigma in Android application.
         /// <summary>
         /// Presents a message with a windows MessageBox.
-        /// TODO: re-expose this function!
         /// </summary>
-        //public static MessageBoxResult Dialog(string header, string message)
-        //{
-        //    return MessageBox.Show(message, header);
-        //}
+        public static MessageBoxResult Dialog(string header, string message)
+        {
+            return MessageBox.Show(message, header);
+        }*/
     }
 
     /// <summary>
@@ -249,10 +249,21 @@ namespace Sigma
     /// </summary>
     public static class Conversion
     {
+        public static Symbol ValueToSymbol<T>(T value)
+        {
+            var converter = new SymbolicConverter(typeof(T));
+            return (Symbol)converter.ConvertTo(value, typeof(Symbol));
+        }
+
         public static string ValueToString<T>(T value)
         {
             var converter = new SymbolicConverter(typeof(T));
             return converter.ConvertToString(value);
+        }
+
+        public static Symbol StringToSymbol(string str)
+        {
+            return Symbol.FromString(str);
         }
 
         public static T StringToValue<T>(string str)
