@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 
 namespace Sigma
 {
@@ -65,6 +66,12 @@ namespace Sigma
             }
         }
 
+        private static string ToString(Type sourceType, object source)
+        {
+            var symbol = ToSymbol(sourceType, source);
+            return symbol.ToString();
+        }
+
         private static object FromSymbol(Type destType, Symbol symbol)
         {
             // desymbolize .NET primitive
@@ -82,9 +89,9 @@ namespace Sigma
             if (destType == typeof(string))
             {
                 return symbol.Match(
-                    atom => SymbolParser.IsExplicit(atom) ? (object)atom.Substring(1, atom.Length - 2) : (object)atom,
-                    number => (object)number,
-                    str => (object)str,
+                    atom => SymbolParser.IsExplicit(atom) ? atom.Substring(1, atom.Length - 2) : atom,
+                    number => number,
+                    str => str,
                     quote => Expression<object>.Throw<ConversionException>(),
                     symbols => Expression<object>.Throw<ConversionException>());
             }
@@ -92,7 +99,7 @@ namespace Sigma
             // desymbolize Symbol (no tranformation)
             if (destType == typeof(Symbol))
             {
-                return (object)symbol;
+                return symbol;
             }
 
             var optTypeConverter = destType.TryGetCustomTypeConverter();
@@ -110,6 +117,53 @@ namespace Sigma
                 str => TypeDescriptor.GetConverter(destType).ConvertFromString(str),
                 quote => Expression<object>.Throw<ConversionException>(),
                 symbols => Expression<object>.Throw<ConversionException>());
+        }
+
+        private static object FromString(Type destType, string source)
+        {
+            var symbol = Symbol.FromString(source);
+            return FromSymbol(destType, symbol);
+        }
+
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destType)
+        {
+            return
+                destType == typeof(string) ||
+                destType == typeof(Symbol) ||
+                destType == pointType;
+        }
+
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo info, object source, Type destType)
+        {
+            if (destType == typeof(string))
+            {
+                if (source == null) return source;
+                return ToString(pointType, source);
+            }
+            if (destType == typeof(Symbol)) return ToSymbol(pointType, source);
+            if (destType == pointType) return source;
+            throw new ConversionException("Invalid SymbolicConverter conversion to source.");
+        }
+
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            return
+                sourceType == typeof(string) ||
+                sourceType == typeof(Symbol) ||
+                sourceType == pointType;
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo info, object source)
+        {
+            if (source == null) return source;
+            var sourceType = source.GetType();
+            if (sourceType != pointType)
+            {
+                if (source is string) return FromString(pointType, (string)source);
+                if (source is Symbol) return FromSymbol(pointType, (Symbol)source);
+                throw new ConversionException("Invalid SymbolicConverter conversion from string.");
+            }
+            return source;
         }
 
         private readonly Type pointType;

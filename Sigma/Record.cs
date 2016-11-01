@@ -123,7 +123,7 @@ namespace Sigma
                         .Select((fieldSymbol, index) => {
                             var fieldName = "Item" + (index + 1);
                             var fieldProperty = pointType.GetProperty(fieldName, BindingFlags.Public | BindingFlags.Instance);
-                            var fieldConverter = TypeDescriptor.GetConverter(fieldProperty.PropertyType);
+                            var fieldConverter = new SymbolicConverter(fieldProperty.PropertyType);
                             var fieldValue = fieldSymbol.Match(
                                 atom => fieldConverter.ConvertFromString(atom),
                                 number => fieldConverter.ConvertFromString(number),
@@ -164,7 +164,7 @@ namespace Sigma
                         var fieldName = "Item" + (index + 1);
                         var field = pointType.GetProperty(fieldName, BindingFlags.Public | BindingFlags.Instance);
                         var fieldValue = field.GetValue(value, null);
-                        var fieldConverter = TypeDescriptor.GetConverter(field.PropertyType);
+                        var fieldConverter = new SymbolicConverter(field.PropertyType);
                         return fieldConverter.CanConvertTo(typeof(Symbol)) ? (Symbol)fieldConverter.ConvertTo(fieldValue, typeof(Symbol)) : new Symbol(fieldConverter.ConvertToString(fieldValue));
                     });
                 return new Symbol(fieldSymbols);

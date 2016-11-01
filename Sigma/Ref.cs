@@ -48,7 +48,7 @@ namespace Sigma
         {
             this.pointType = pointType;
             var valueProperty = pointType.GetProperty(nameof(Ref<bool>.Value));
-            valueConverter = TypeDescriptor.GetConverter(valueProperty.PropertyType);
+            valueConverter = new SymbolicConverter(valueProperty.PropertyType);
         }
 
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)

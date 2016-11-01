@@ -165,12 +165,12 @@ namespace Sigma
         {
             get
             {
-                var valueConverter = TypeDescriptor.GetConverter(typeof(T));
+                var valueConverter = new SymbolicConverter(typeof(T));
                 return valueConverter.ConvertToString(value);
             }
             set
             {
-                var valueConverter = TypeDescriptor.GetConverter(typeof(T));
+                var valueConverter = new SymbolicConverter(typeof(T));
                 var valueField = GetType().GetField(nameof(Tcc<T>.value));
                 var value2 = (T)valueConverter.ConvertFromString(value);
                 this.value = value2;
@@ -209,7 +209,7 @@ namespace Sigma
         {
             this.pointType = pointType;
             var valueProperty = pointType.GetProperty(nameof(Tcc<bool>.Value));
-            valueConverter = TypeDescriptor.GetConverter(valueProperty.PropertyType);
+            valueConverter = new SymbolicConverter(valueProperty.PropertyType);
         }
 
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
