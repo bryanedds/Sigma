@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Sprache;
+using System.Runtime.Serialization;
 
 namespace Sigma
 {
@@ -365,8 +366,6 @@ namespace Sigma
         public ConversionException() { }
         public ConversionException(string message) : base(message) { }
         public ConversionException(string message, Exception inner) : base(message, inner) { }
-        protected ConversionException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        protected ConversionException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

@@ -115,8 +115,8 @@ namespace Sigma
                 atom => TypeDescriptor.GetConverter(destType).ConvertFromString(atom),
                 number => TypeDescriptor.GetConverter(destType).ConvertFromString(number),
                 str => TypeDescriptor.GetConverter(destType).ConvertFromString(str),
-                quote => Expression<object>.Throw<ConversionException>(),
-                symbols => Expression<object>.Throw<ConversionException>());
+                quote => Expression<object>.Throw(new ConversionException("Expected atom, number, or string for vanilla .NET type.")),
+                symbols => Expression<object>.Throw(new ConversionException("Expected atom, number, or string for vanilla .NET type.")));
         }
 
         private static object FromString(Type destType, string source)
