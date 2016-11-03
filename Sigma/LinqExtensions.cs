@@ -39,12 +39,12 @@ namespace System.Linq
             while (enumerator.MoveNext()) yield return enumerator.Current;
         }
 
-        public static bool None<T>(this IEnumerable<T> enumerable)
+        public static bool Empty<T>(this IEnumerable<T> enumerable)
         {
             return !enumerable.Any();
         }
 
-        public static bool None<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate)
+        public static bool Empty<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate)
         {
             return !enumerable.Any(predicate);
         }
@@ -181,7 +181,7 @@ namespace System.Linq
         {
             return enumerable.Split(span, (front, back) =>
             {
-                if (front.None()) return acc;
+                if (front.Empty()) return acc;
                 acc.Add(front);
                 return Windowed(back, span, acc);
             });
