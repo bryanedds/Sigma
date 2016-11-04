@@ -147,7 +147,7 @@ namespace Sigma
         /// <summary>
         /// Check if a string is empty.
         /// </summary>
-        public static bool IsEmpty(this string str)
+        public static bool Empty(this string str)
         {
             return str.Length == 0;
         }

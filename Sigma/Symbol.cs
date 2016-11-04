@@ -318,7 +318,7 @@ namespace Sigma
         private static string WriteAtom(string content)
         {
             var distilled = Distillate(content);
-            if (distilled.IsEmpty()) return $"{OpenStringChar}{CloseStringChar}";
+            if (distilled.Empty()) return $"{OpenStringChar}{CloseStringChar}";
             if (!IsExplicit(distilled) && ShouldBeExplicit(distilled)) return $"{OpenStringChar}{distilled}{CloseStringChar}";
             if (IsExplicit(distilled) && !ShouldBeExplicit(distilled)) return distilled.Substring(1, distilled.Length - 2);
             return distilled;
