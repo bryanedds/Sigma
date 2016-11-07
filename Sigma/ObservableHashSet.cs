@@ -144,8 +144,8 @@ namespace Sigma
 
         public override bool Equals(object obj)
         {
-            var optHashSet = obj as ObservableHashSet<T>;
-            if (optHashSet != null) return this.SequenceEqual(optHashSet);
+            var hashSetOpt = obj as ObservableHashSet<T>;
+            if (hashSetOpt != null) return this.SequenceEqual(hashSetOpt);
             return false;
         }
 
@@ -160,7 +160,7 @@ namespace Sigma
         }
 
         [OnDeserializing]
-        private void Initialize(StreamingContext optContext)
+        private void Initialize(StreamingContext contextOpt)
         {
             DataContract.Initialize(this, nameof(hashSet), new HashSet<T>());
             ElementAdded += (_, _2) => NotifyPropertyChanged(nameof(Elements));

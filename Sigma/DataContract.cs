@@ -34,8 +34,8 @@ namespace Sigma
         public static void Initialize<T, V>(T obj, string fieldName, V value)
         {
             var type = typeof(T);
-            var optField = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
-            optField.SetValue(obj, value);
+            var fieldOpt = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+            fieldOpt.SetValue(obj, value);
         }
 
         /// <summary>

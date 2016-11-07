@@ -243,8 +243,8 @@ namespace Sigma
 
         public override bool Equals(object obj)
         {
-            var optDict = obj as ObservableDictionary<K, V>;
-            if (optDict != null) return this.SequenceEqual(optDict);
+            var dictOpt = obj as ObservableDictionary<K, V>;
+            if (dictOpt != null) return this.SequenceEqual(dictOpt);
             return false;
         }
 
@@ -259,7 +259,7 @@ namespace Sigma
         }
 
         [OnDeserializing]
-        private void Initialize(StreamingContext optContext)
+        private void Initialize(StreamingContext contextOpt)
         {
             DataContract.Initialize(this, nameof(dictionary), new Dictionary<K, V>());
             EntryAdded += (_, _2) => NotifyPropertyChanged(nameof(Entries));

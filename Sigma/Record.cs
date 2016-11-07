@@ -75,7 +75,8 @@ namespace Sigma
         /// <summary>
         /// Create a Record of 6 items.
         /// </summary>
-        public Record(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6) : base(item1, item2, item3, item4, item5, item6) { }
+        public Record(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6) :
+            base(item1, item2, item3, item4, item5, item6) { }
     }
 
     /// <summary>
@@ -87,7 +88,132 @@ namespace Sigma
         /// <summary>
         /// Create a Record of 7 items.
         /// </summary>
-        public Record(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7) : base(item1, item2, item3, item4, item5, item6, item7) { }
+        public Record(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7) :
+            base(item1, item2, item3, item4, item5, item6, item7) { }
+    }
+
+    /// <summary>
+    /// A record is a Tuple but with enhanced serialization.
+    /// </summary>
+    [TypeConverter(typeof(RecordTypeConverter))]
+    public class Record<T1, T2, T3, T4, T5, T6, T7, T8> : Tuple<T1, T2, T3, T4, T5, T6, T7, Tuple<T8>>
+    {
+        /// <summary>
+        /// Create a Record of 8 items.
+        /// </summary>
+        public Record(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, T8 item8) :
+            base(item1, item2, item3, item4, item5, item6, item7, new Tuple<T8>(item8)) { }
+        public T8 Item8 { get { return Rest.Item1; } }
+    }
+
+    /// <summary>
+    /// A record is a Tuple but with enhanced serialization.
+    /// </summary>
+    [TypeConverter(typeof(RecordTypeConverter))]
+    public class Record<T1, T2, T3, T4, T5, T6, T7, T8, T9> : Tuple<T1, T2, T3, T4, T5, T6, T7, Tuple<T8, T9>>
+    {
+        /// <summary>
+        /// Create a Record of 9 items.
+        /// </summary>
+        public Record(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, T8 item8, T9 item9) :
+            base(item1, item2, item3, item4, item5, item6, item7, new Tuple<T8, T9>(item8, item9)) { }
+        public T8 Item8 { get { return Rest.Item1; } }
+        public T9 Item9 { get { return Rest.Item2; } } // https://www.youtube.com/watch?v=IG0R5GU2e00
+    }
+
+    /// <summary>
+    /// A record is a Tuple but with enhanced serialization.
+    /// </summary>
+    [TypeConverter(typeof(RecordTypeConverter))]
+    public class Record<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> :
+        Tuple<T1, T2, T3, T4, T5, T6, T7, Tuple<T8, T9, T10>>
+    {
+        /// <summary>
+        /// Create a Record of 10 items.
+        /// </summary>
+        public Record(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, T8 item8, T9 item9, T10 item10) :
+            base(item1, item2, item3, item4, item5, item6, item7, new Tuple<T8, T9, T10>(item8, item9, item10)) { }
+        public T8 Item8 { get { return Rest.Item1; } }
+        public T9 Item9 { get { return Rest.Item2; } } // https://www.youtube.com/watch?v=IG0R5GU2e00
+        public T10 Item10 { get { return Rest.Item3; } }
+    }
+
+    /// <summary>
+    /// A record is a Tuple but with enhanced serialization.
+    /// </summary>
+    [TypeConverter(typeof(RecordTypeConverter))]
+    public class Record<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> :
+        Tuple<T1, T2, T3, T4, T5, T6, T7, Tuple<T8, T9, T10, T11>>
+    {
+        /// <summary>
+        /// Create a Record of 11 items.
+        /// </summary>
+        public Record(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, T8 item8, T9 item9, T10 item10, T11 item11) :
+            base(item1, item2, item3, item4, item5, item6, item7, new Tuple<T8, T9, T10, T11>(item8, item9, item10, item11)) { }
+        public T8 Item8 { get { return Rest.Item1; } }
+        public T9 Item9 { get { return Rest.Item2; } } // https://www.youtube.com/watch?v=IG0R5GU2e00
+        public T10 Item10 { get { return Rest.Item3; } }
+        public T11 Item11 { get { return Rest.Item4; } }
+    }
+
+    /// <summary>
+    /// A record is a Tuple but with enhanced serialization.
+    /// </summary>
+    [TypeConverter(typeof(RecordTypeConverter))]
+    public class Record<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> :
+        Tuple<T1, T2, T3, T4, T5, T6, T7, Tuple<T8, T9, T10, T11, T12>>
+    {
+        /// <summary>
+        /// Create a Record of 12 items.
+        /// </summary>
+        public Record(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, T8 item8, T9 item9, T10 item10, T11 item11, T12 item12) :
+            base(item1, item2, item3, item4, item5, item6, item7, new Tuple<T8, T9, T10, T11, T12>(item8, item9, item10, item11, item12)) { }
+        public T8 Item8 { get { return Rest.Item1; } }
+        public T9 Item9 { get { return Rest.Item2; } } // https://www.youtube.com/watch?v=IG0R5GU2e00
+        public T10 Item10 { get { return Rest.Item3; } }
+        public T11 Item11 { get { return Rest.Item4; } }
+        public T12 Item12 { get { return Rest.Item5; } }
+    }
+
+    /// <summary>
+    /// A record is a Tuple but with enhanced serialization.
+    /// </summary>
+    [TypeConverter(typeof(RecordTypeConverter))]
+    public class Record<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> :
+        Tuple<T1, T2, T3, T4, T5, T6, T7, Tuple<T8, T9, T10, T11, T12, T13>>
+    {
+        /// <summary>
+        /// Create a Record of 13 items.
+        /// </summary>
+        public Record(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, T8 item8, T9 item9, T10 item10, T11 item11, T12 item12, T13 item13) :
+            base(item1, item2, item3, item4, item5, item6, item7, new Tuple<T8, T9, T10, T11, T12, T13>(item8, item9, item10, item11, item12, item13)) { }
+        public T8 Item8 { get { return Rest.Item1; } }
+        public T9 Item9 { get { return Rest.Item2; } } // https://www.youtube.com/watch?v=IG0R5GU2e00
+        public T10 Item10 { get { return Rest.Item3; } }
+        public T11 Item11 { get { return Rest.Item4; } }
+        public T12 Item12 { get { return Rest.Item5; } }
+        public T13 Item13 { get { return Rest.Item6; } }
+    }
+
+    /// <summary>
+    /// A record is a Tuple but with enhanced serialization.
+    /// </summary>
+    [TypeConverter(typeof(RecordTypeConverter))]
+    public class Record<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> :
+        Tuple<T1, T2, T3, T4, T5, T6, T7, Tuple<T8, T9, T10, T11, T12, T13, T14>>
+    {
+        /// <summary>
+        /// Create a Record of 14 items.
+        /// </summary>
+        public Record(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, T8 item8, T9 item9, T10 item10, T11 item11, T12 item12, T13 item13, T14 item14) :
+            base(item1, item2, item3, item4, item5, item6, item7, new Tuple<T8, T9, T10, T11, T12, T13, T14>(item8, item9, item10, item11, item12, item13, item14)) { }
+        public T8 Item8 { get { return Rest.Item1; } }
+        public T9 Item9 { get { return Rest.Item2; } } // https://www.youtube.com/watch?v=IG0R5GU2e00
+        public T10 Item10 { get { return Rest.Item3; } }
+        public T11 Item11 { get { return Rest.Item4; } }
+        public T12 Item12 { get { return Rest.Item5; } }
+        public T13 Item13 { get { return Rest.Item6; } }
+        public T14 Item14 { get { return Rest.Item7; } }
     }
 
     /// <summary>

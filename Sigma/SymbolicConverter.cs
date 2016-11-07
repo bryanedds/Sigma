@@ -13,14 +13,14 @@ namespace Sigma
 
         private static Symbol ToSymbol(Type sourceType, object source)
         {
-            var optTypeConverter = sourceType.TryGetCustomTypeConverter();
-            if (optTypeConverter != null)
+            var typeConverterOpt = sourceType.TryGetCustomTypeConverter();
+            if (typeConverterOpt != null)
             {
                 // symbolize user-defined type
-                if (!optTypeConverter.CanConvertTo(typeof(Symbol)))
+                if (!typeConverterOpt.CanConvertTo(typeof(Symbol)))
                     throw new ConversionException("Cannot convert type '" + source.GetType().Name + "' to Symbol.");
                 else
-                    return (Symbol)optTypeConverter.ConvertTo(source, typeof(Symbol));
+                    return (Symbol)typeConverterOpt.ConvertTo(source, typeof(Symbol));
             }
             else
             {
@@ -102,12 +102,12 @@ namespace Sigma
                 return symbol;
             }
 
-            var optTypeConverter = destType.TryGetCustomTypeConverter();
-            if (optTypeConverter != null)
+            var typeConverterOpt = destType.TryGetCustomTypeConverter();
+            if (typeConverterOpt != null)
             {
                 // desymbolize user-defined type
-                if (optTypeConverter.CanConvertFrom(typeof(Symbol))) return optTypeConverter.ConvertFrom(symbol);
-                throw new ConversionException("Expected ability to convert from Symbol for custom type converter '" + optTypeConverter.GetType().Name + "'.");
+                if (typeConverterOpt.CanConvertFrom(typeof(Symbol))) return typeConverterOpt.ConvertFrom(symbol);
+                throw new ConversionException("Expected ability to convert from Symbol for custom type converter '" + typeConverterOpt.GetType().Name + "'.");
             }
 
             // desymbolize vanilla .NET type
