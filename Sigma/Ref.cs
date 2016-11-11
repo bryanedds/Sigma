@@ -10,7 +10,10 @@ namespace Sigma
     [TypeConverter(typeof(RefConverter))]
     public class Ref<T>
     {
-        public Ref(T value) { this.value = value; }
+        public Ref(T value)
+        {
+            this.value = value;
+        }
 
         public T Value
         {
