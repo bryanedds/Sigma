@@ -55,18 +55,6 @@ namespace System.Linq
             return @default;
         }
 
-        public static IEnumerable<T> Append<T>(this IEnumerable<T> enumerable, T value)
-        {
-            foreach (var cur in enumerable) yield return cur;
-            yield return value;
-        }
-
-        public static IEnumerable<T> Prepend<T>(this IEnumerable<T> enumerable, T value)
-        {
-            yield return value;
-            foreach (var cur in enumerable) yield return cur;
-        }
-
         public static U Split<T, U>(this IEnumerable<T> enumerable, int span, Func<IEnumerable<T>, IEnumerable<T>, U> continuation)
         {
             // cons up fron values into a list
