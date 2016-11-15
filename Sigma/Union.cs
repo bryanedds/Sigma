@@ -24,12 +24,12 @@ namespace Sigma
     /// C#.
     /// </summary>
     [DataContract, TypeConverter(typeof(UnionTypeConverter))]
-    public class Union<T, V> : IEquatable<Union<T, V>> where T : struct, IConvertible
+    public class Union<T, D> : IEquatable<Union<T, D>> where T : struct, IConvertible
     {
-        public Union(T tag, V data)
+        public Union(T tag, D data)
         {
 #if DEBUG
-            var unionType = ((Enum)(object)tag).TryGetAttributeOfType<UnionAttribute>().TryThen(attr => attr.Type) ?? typeof(V);
+            var unionType = ((Enum)(object)tag).TryGetAttributeOfType<UnionAttribute>().TryThen(attr => attr.Type) ?? typeof(D);
             if (!unionType.IsInstanceOfType(data))
                 throw new ArgumentException($"Union instantiation did not satisfy type requirements for type '{GetType().FullName}'.");
 #endif
@@ -39,10 +39,10 @@ namespace Sigma
 
         public override bool Equals(object other)
         {
-            return other is Union<T, V> && Equals((Union<T, V>)other);
+            return other is Union<T, D> && Equals((Union<T, D>)other);
         }
 
-        public bool Equals(Union<T, V> other)
+        public bool Equals(Union<T, D> other)
         {
             return
                 Tag.Equals(other.Tag) &&
@@ -60,7 +60,7 @@ namespace Sigma
         }
 
         public readonly T Tag;
-        public readonly V Data;
+        public readonly D Data;
     }
 
     /// <summary>

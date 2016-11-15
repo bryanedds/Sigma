@@ -8,27 +8,6 @@ using System.Runtime.Serialization;
 namespace Sigma
 {
     /// <summary>
-    /// Union tag for Symbol type.
-    /// </summary>
-    public enum SymbolTag
-    {
-        [Union(typeof(string))] Atom = 0,
-        [Union(typeof(string))] Number,
-        [Union(typeof(string))] String,
-        [Union(typeof(string))] Quote,
-        [Union(typeof(ImmutableList<Symbol>))] Symbols
-    }
-
-    /// Type specifier for Number.
-    public class NumberSpecifier : Tuple<string> { public NumberSpecifier(string number) : base(number) { } }
-
-    /// Type specifier for String.
-    public class StringSpecifier : Tuple<string> { public StringSpecifier(string str) : base(str) { } }
-
-    /// Type specifier for Quote.
-    public class QuoteSpecifier : Tuple<string> { public QuoteSpecifier(string quote) : base(quote) { } }
-
-    /// <summary>
     /// A generalized representation of all possible values.
     /// </summary>
     public class Symbol : Union<SymbolTag, object>, IEquatable<Symbol>
@@ -186,6 +165,27 @@ namespace Sigma
                 onSymbols);
         }
     }
+
+    /// <summary>
+    /// Union tag for Symbol type.
+    /// </summary>
+    public enum SymbolTag
+    {
+        [Union(typeof(string))] Atom = 0,
+        [Union(typeof(string))] Number,
+        [Union(typeof(string))] String,
+        [Union(typeof(string))] Quote,
+        [Union(typeof(ImmutableList<Symbol>))] Symbols
+    }
+
+    /// Type specifier for Number.
+    public class NumberSpecifier : Tuple<string> { public NumberSpecifier(string number) : base(number) { } }
+
+    /// Type specifier for String.
+    public class StringSpecifier : Tuple<string> { public StringSpecifier(string str) : base(str) { } }
+
+    /// Type specifier for Quote.
+    public class QuoteSpecifier : Tuple<string> { public QuoteSpecifier(string quote) : base(quote) { } }
 
     /// <summary>
     /// Convert strings and symbols, with the following parses:

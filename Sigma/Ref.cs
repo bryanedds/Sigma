@@ -6,9 +6,10 @@ namespace Sigma
 {
     /// <summary>
     /// A mutable variable that can exist inside Unions and / or Records.
+    /// Equality uses value semantics.
     /// </summary>
     [TypeConverter(typeof(RefConverter))]
-    public class Ref<T>
+    public class Ref<T> : IEquatable<Ref<T>>
     {
         public Ref(T value)
         {
@@ -24,6 +25,22 @@ namespace Sigma
                 this.value = value;
                 Callback?.Invoke(oldValue);
             }
+        }
+
+        public bool Equals(Ref<T> other)
+        {
+            if (value == null)
+            {
+                if (other.Value == null) return true;
+                return false;
+            }
+            return value.Equals(other.Value);
+        }
+
+        public override int GetHashCode()
+        {
+            if (value == null) return 0;
+            return value.GetHashCode();
         }
 
         public event Action<T> Callback;
