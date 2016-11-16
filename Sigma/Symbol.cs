@@ -296,11 +296,6 @@ namespace Sigma
                 .Replace(CloseStringChar.ToString(), string.Empty);
         }
 
-        public static bool IsExplicit(string content)
-        {
-            return content.StartsWith(OpenStringChar.ToString()) && content.EndsWith(CloseStringChar.ToString());
-        }
-
         public static bool IsNumber(string content)
         {
             return
@@ -310,9 +305,26 @@ namespace Sigma
                  .WasSuccessful;
         }
 
+        public static bool IsExplicit(string content)
+        {
+            return content.StartsWith(OpenStringChar.ToString()) && content.EndsWith(CloseStringChar.ToString());
+        }
+
         public static bool ShouldBeExplicit(string content)
         {
             return content.Any(chr => char.IsWhiteSpace(chr) || StructureCharsNoStr.Contains(chr));
+        }
+
+        public static string Implicitize(string str)
+        {
+            var distilled = Distillate(str);
+            return distilled.Substring(1, distilled.Length - 2);
+        }
+
+        public static string Explicitize(string str)
+        {
+            var distilled = Distillate(str);
+            return $"{OpenStringChar}{distilled}{CloseStringChar}";
         }
 
         private static string WriteAtom(string content)

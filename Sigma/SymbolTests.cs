@@ -2,9 +2,9 @@
 
 namespace Sigma.Tests
 {
-    public class TestRecord : Record<int, string>
+    public class TestRecord : Record<int, Ref<string>>
     {
-        public TestRecord(int i, string s) : base(i, s) { }
+        public TestRecord(int i, Ref<string> s) : base(i, s) { }
     }
 
     public class TestRecordRecord : Record<int, TestRecord>
@@ -52,15 +52,15 @@ namespace Sigma.Tests
         [Fact]
         public void RecordSerializationWorks()
         {
-            Assert.Equal(Conversion.ValueToString(new TestRecord(0, "")), "[0 \"\"]");
-            Assert.Equal(Conversion.ValueToString(new TestRecordRecord(0, new TestRecord(0, ""))), "[0 [0 \"\"]]");
+            Assert.Equal(Conversion.ValueToString(new TestRecord(0, new Ref<string>(""))), "[0 \"\"]");
+            Assert.Equal(Conversion.ValueToString(new TestRecordRecord(0, new TestRecord(0, new Ref<string>("")))), "[0 [0 \"\"]]");
         }
 
         [Fact]
         public void RecordDeserializationWorks()
         {
-            Assert.Equal(Conversion.StringToValue<TestRecord>("[0 \"\"]"), new TestRecord(0, ""));
-            Assert.Equal(Conversion.StringToValue<TestRecordRecord>("[0 [0 \"\"]]"), new TestRecordRecord(0, new TestRecord(0, "")));
+            Assert.True(Conversion.StringToValue<TestRecord>("[0 \"\"]").Equals(new TestRecord(0, new Ref<string>(""))));
+            Assert.True(Conversion.StringToValue<TestRecordRecord>("[0 [0 \"\"]]").Equals(new TestRecordRecord(0, new TestRecord(0, new Ref<string>("")))));
         }
 
         [Fact]

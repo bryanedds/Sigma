@@ -100,7 +100,7 @@ namespace Sigma
                     var data = fields[1].Match(
                         atom => dataConverter.ConvertFromString(atom),
                         number => dataConverter.ConvertFromString(number),
-                        str => dataConverter.ConvertFromString(str),
+                        str => dataConverter.ConvertFromString(SymbolParser.Explicitize(str)),
                         _ => fields[1],
                         _ => dataConverter.ConvertFrom(fields[1]));
                     return Activator.CreateInstance(pointType, new object[] { tag, data });

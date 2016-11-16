@@ -27,14 +27,19 @@ namespace Sigma
             }
         }
 
+        public event Action<T> Callback;
+
         public bool Equals(Ref<T> other)
         {
-            if (value == null)
-            {
-                if (other.Value == null) return true;
-                return false;
-            }
+            if (value == null) return other.Value == null;
             return value.Equals(other.Value);
+        }
+
+        public override bool Equals(object other)
+        {
+            var otherAsRefT = other as Ref<T>;
+            if (otherAsRefT != null) return Equals(otherAsRefT);
+            return false;
         }
 
         public override int GetHashCode()
@@ -43,7 +48,17 @@ namespace Sigma
             return value.GetHashCode();
         }
 
-        public event Action<T> Callback;
+        public static bool operator ==(Ref<T> left, Ref<T> right)
+        {
+            if (ReferenceEquals(left, right)) return true;
+            if ((object)left == null || (object)right == null) return false;
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Ref<T> left, Ref<T> right)
+        {
+            return !(left == right);
+        }
 
         private T value;
     }

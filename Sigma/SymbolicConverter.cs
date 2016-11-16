@@ -102,10 +102,10 @@ namespace Sigma
                 return symbol;
             }
 
+            // desymbolize user-defined type
             var typeConverterOpt = destType.TryGetCustomTypeConverter();
             if (typeConverterOpt != null)
             {
-                // desymbolize user-defined type
                 if (typeConverterOpt.CanConvertFrom(typeof(Symbol))) return typeConverterOpt.ConvertFrom(symbol);
                 throw new ConversionException("Expected ability to convert from Symbol for custom type converter '" + typeConverterOpt.GetType().Name + "'.");
             }

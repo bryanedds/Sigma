@@ -253,7 +253,7 @@ namespace Sigma
                             var fieldValue = fieldSymbol.Match(
                                 atom => fieldConverter.ConvertFromString(atom),
                                 number => fieldConverter.ConvertFromString(number),
-                                str => fieldConverter.ConvertFromString(str),
+                                str => fieldConverter.ConvertFromString(SymbolParser.Explicitize(str)),
                                 _ => fieldSymbol,
                                 _ => fieldConverter.ConvertFrom(fieldSymbol));
                             return fieldValue; })
