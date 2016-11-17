@@ -275,5 +275,41 @@ namespace Sigma
             var converter = new SymbolicConverter(typeof(T));
             return (T)converter.ConvertFromString(str);
         }
+
+        public static bool TrySerialize<T>(string filePath, T value)
+        {
+            try
+            {
+                var str = ValueToString(value);
+                var bytes = Encoding.UTF8.GetBytes(str);
+                File.WriteAllBytes(filePath, bytes);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool TryDeserialize<T>(string filePath, out T value)
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    var bytes = File.ReadAllBytes(filePath);
+                    var str = Encoding.UTF8.GetString(bytes);
+                    value = StringToValue<T>(str);
+                    return true;
+                }
+                value = default(T);
+                return false;
+            }
+            catch
+            {
+                value = default(T);
+                return false;
+            }
+        }
     }
 }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Sprache;
 using System.Runtime.Serialization;
+using Sprache;
 
 namespace Sigma
 {
