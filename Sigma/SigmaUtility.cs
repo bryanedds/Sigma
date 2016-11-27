@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -75,7 +74,7 @@ namespace Sigma
         /// </summary>
         public static int Trace(string header, string message)
         {
-            Trace.Fail(header + ".\n" + message);
+            System.Diagnostics.Trace.Fail(header + ".\n" + message);
             return 0;
         }
 
