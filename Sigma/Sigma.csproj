@@ -46,8 +46,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.1.2.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>..\packages\System.Collections.Immutable.1.3.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Core" />
@@ -76,7 +76,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
+    <Compile Include="SigmaConstants.cs" />
     <Compile Include="DataContract.cs" />
     <Compile Include="DynamicEnum.cs" />
     <Compile Include="LinqExtensions.cs" />
@@ -91,11 +91,11 @@
     <Compile Include="Reflection.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="SymbolicConverter.cs" />
-    <Compile Include="SymbolTests.cs" />
+    <Compile Include="SymbolicTests.cs" />
     <Compile Include="TimeRange.cs" />
     <Compile Include="Union.cs" />
     <Compile Include="Unit.cs" />
-    <Compile Include="Utility.cs" />
+    <Compile Include="SigmaUtility.cs" />
     <Compile Include="SigmaMath.cs" />
   </ItemGroup>
   <ItemGroup>

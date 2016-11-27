@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -37,9 +38,9 @@ namespace Sigma
         public static T Throw<E>() where E : Exception, new() { throw new E(); }
 
         /// <summary>
-        /// Throw the given exception.
+        /// Throw the given exception of type E.
         /// </summary>
-        public static T Throw(Exception ex) { throw ex; }
+        public static T Throw<E>(E ex) where E : Exception, new() { throw ex; }
     }
 
     /// <summary>
@@ -74,7 +75,7 @@ namespace Sigma
         /// </summary>
         public static int Trace(string header, string message)
         {
-            System.Diagnostics.Trace.Fail(header + ".\n" + message);
+            Trace.Fail(header + ".\n" + message);
             return 0;
         }
 
