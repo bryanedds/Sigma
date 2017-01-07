@@ -37,9 +37,9 @@ namespace Sigma
         public static T Throw<E>() where E : Exception, new() { throw new E(); }
 
         /// <summary>
-        /// Throw the given exception.
+        /// Throw the given exception of type E.
         /// </summary>
-        public static T Throw(Exception ex) { throw ex; }
+        public static T Throw<E>(E ex) where E : Exception, new() { throw ex; }
     }
 
     /// <summary>
