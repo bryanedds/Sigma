@@ -74,7 +74,7 @@ namespace Sigma.Tests
         public void UnionDeserializationWorks()
         {
             Assert.Equal(Conversion.StringToValue<TestUnion>("[Int 0]"), new TestUnion(0));
-            Assert.Equal(Conversion.StringToValue<TestUnion>("[String \"\"]"), new TestUnion(""));
+            Assert.Equal(Conversion.StringToValue<TestUnion>("[String \"\"]"), new TestUnion("\"\""));
         }
     }
 }

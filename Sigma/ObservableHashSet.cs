@@ -113,7 +113,7 @@ namespace Sigma
         /// </summary>
         public void CopyTo(T[] array, int arrayIndex)
         {
-            ((ICollection<T>)hashSet).CopyTo(array, arrayIndex);
+            hashSet.CopyTo(array, arrayIndex);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace Sigma
         /// </summary>
         public bool Remove(T element)
         {
-            var removed = ((ICollection<T>)hashSet).Remove(element);
+            var removed = hashSet.Remove(element);
             if (removed) ElementRemoved?.Invoke(this, new ElementRemovedEventArgs<T>(element));
             return removed;
         }

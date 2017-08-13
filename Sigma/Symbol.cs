@@ -109,60 +109,60 @@ namespace Sigma
         }
 
         public T Match<T>(
-            Func<string, T> onAtom,
-            Func<string, T> onNumber,
-            Func<string, T> onString,
-            Func<string, T> onQuote,
-            Func<ImmutableList<Symbol>, T> onSymbols)
+            Func<string, T> Atom,
+            Func<string, T> Number,
+            Func<string, T> String,
+            Func<string, T> Quote,
+            Func<ImmutableList<Symbol>, T> Symbols)
         {
             switch (Tag)
             {
-                case SymbolTag.Atom: return onAtom(AsAtom);
-                case SymbolTag.Number: return onNumber(AsNumber);
-                case SymbolTag.String: return onString(AsString);
-                case SymbolTag.Quote: return onQuote(AsQuote);
-                case SymbolTag.Symbols: return onSymbols(AsSymbols);
+                case SymbolTag.Atom: return Atom(AsAtom);
+                case SymbolTag.Number: return Number(AsNumber);
+                case SymbolTag.String: return String(AsString);
+                case SymbolTag.Quote: return Quote(AsQuote);
+                case SymbolTag.Symbols: return Symbols(AsSymbols);
                 default: throw new InexhausiveException();
             }
         }
 
         public T Match4<T>(
-            Func<string, T> onAtom,
-            Func<string, T> onString,
-            Func<string, T> onNumber,
+            Func<string, T> Atom,
+            Func<string, T> String,
+            Func<string, T> Number,
             Func<ImmutableList<Symbol>, T> onSymbols)
         {
             return Match(
-                onAtom,
-                onNumber,
-                onString,
+                Atom,
+                Number,
+                String,
                 quote => Expression<T>.Throw<InexhausiveException>(),
                 onSymbols);
         }
 
         public T Match3<T>(
-            Func<string, T> onAtom,
-            Func<string, T> onQuote,
-            Func<ImmutableList<Symbol>, T> onSymbols)
+            Func<string, T> Atom,
+            Func<string, T> Quote,
+            Func<ImmutableList<Symbol>, T> Symbols)
         {
             return Match(
-                onAtom,
+                Atom,
                 number => Expression<T>.Throw<InexhausiveException>(),
                 str => Expression<T>.Throw<InexhausiveException>(),
-                onQuote,
-                onSymbols);
+                Quote,
+                Symbols);
         }
 
         public T Match2<T>(
-            Func<string, T> onAtom,
-            Func<ImmutableList<Symbol>, T> onSymbols)
+            Func<string, T> Atom,
+            Func<ImmutableList<Symbol>, T> Symbols)
         {
             return Match(
-                onAtom,
+                Atom,
                 number => Expression<T>.Throw<InexhausiveException>(),
                 str => Expression<T>.Throw<InexhausiveException>(),
                 quote => Expression<T>.Throw<InexhausiveException>(),
-                onSymbols);
+                Symbols);
         }
     }
 
@@ -358,12 +358,7 @@ namespace Sigma
 
         public static string WriteSymbol(Symbol symbol)
         {
-            return symbol.Match(
-                atom => WriteAtom(atom),
-                number => WriteNumber(number),
-                str => WriteString(str),
-                quote => WriteQuote(quote),
-                symbols => WriteSymbols(symbols));
+            return symbol.Match(WriteAtom, WriteNumber, WriteString, WriteQuote, WriteSymbols);
         }
 
         public static string UnparseSymbol(Symbol symbol)

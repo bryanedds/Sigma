@@ -29,7 +29,14 @@ namespace Sigma
         public Union(T tag, D data)
         {
 #if DEBUG
-            var unionType = ((Enum)(object)tag).TryGetAttributeOfType<UnionAttribute>().TryThen(attr => attr.Type) ?? typeof(D);
+            // access the union type
+            var unionType =
+                ((Enum)(object)tag)
+                .TryGetAttributeOfType<UnionAttribute>()
+                .TryThen(attr => attr.Type) ??
+                typeof(D);
+
+            // validate union type
             if (!unionType.IsInstanceOfType(data))
                 throw new ArgumentException($"Union instantiation did not satisfy type requirements for type '{GetType().FullName}'.");
 #endif
@@ -39,7 +46,8 @@ namespace Sigma
 
         public override bool Equals(object other)
         {
-            return other is Union<T, D> && Equals((Union<T, D>)other);
+            var otherAsT = other as Union<T, D>;
+            return otherAsT != null && Equals(otherAsT);
         }
 
         public bool Equals(Union<T, D> other)
