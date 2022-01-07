@@ -38,6 +38,26 @@ namespace Sigma.Union2
 			}
 		}
 
+		public void PartialSwitch(
+			Action<T1> case1 = null)
+		{
+			switch (tag)
+			{
+				case 0: case1?.Invoke(value1); break;
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
+		public TR PartialMatch<TR>(
+			Func<T1, TR> case1 = null)
+		{
+			switch (tag)
+			{
+				case 0: return (case1 ?? (_ => default)).Invoke(value1);
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
 		private readonly int tag;
 		private readonly T1 value1;
 	}
@@ -87,6 +107,30 @@ namespace Sigma.Union2
 			{
 				case 0: return case1(value1);
 				case 1: return case2(value2);
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
+		public void PartialSwitch(
+			Action<T1> case1 = null,
+			Action<T2> case2 = null)
+		{
+			switch (tag)
+			{
+				case 0: case1?.Invoke(value1); break;
+				case 1: case2?.Invoke(value2); break;
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
+		public TR PartialMatch<TR>(
+			Func<T1, TR> case1 = null,
+			Func<T2, TR> case2 = null)
+		{
+			switch (tag)
+			{
+				case 0: return (case1 ?? (_ => default)).Invoke(value1);
+				case 1: return (case2 ?? (_ => default)).Invoke(value2);
 				default: throw new Exception("Unexpected match failure.");
 			}
 		}
@@ -154,6 +198,34 @@ namespace Sigma.Union2
 				case 0: return case1(value1);
 				case 1: return case2(value2);
 				case 2: return case3(value3);
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
+		public void PartialSwitch(
+			Action<T1> case1 = null,
+			Action<T2> case2 = null,
+			Action<T3> case3 = null)
+		{
+			switch (tag)
+			{
+				case 0: case1?.Invoke(value1); break;
+				case 1: case2?.Invoke(value2); break;
+				case 2: case3?.Invoke(value3); break;
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
+		public TR PartialMatch<TR>(
+			Func<T1, TR> case1 = null,
+			Func<T2, TR> case2 = null,
+			Func<T3, TR> case3 = null)
+		{
+			switch (tag)
+			{
+				case 0: return (case1 ?? (_ => default)).Invoke(value1);
+				case 1: return (case2 ?? (_ => default)).Invoke(value2);
+				case 2: return (case3 ?? (_ => default)).Invoke(value3);
 				default: throw new Exception("Unexpected match failure.");
 			}
 		}
@@ -235,6 +307,38 @@ namespace Sigma.Union2
 				case 1: return case2(value2);
 				case 2: return case3(value3);
 				case 3: return case4(value4);
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
+		public void PartialSwitch(
+			Action<T1> case1 = null,
+			Action<T2> case2 = null,
+			Action<T3> case3 = null,
+			Action<T4> case4 = null)
+		{
+			switch (tag)
+			{
+				case 0: case1?.Invoke(value1); break;
+				case 1: case2?.Invoke(value2); break;
+				case 2: case3?.Invoke(value3); break;
+				case 3: case4?.Invoke(value4); break;
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
+		public TR PartialMatch<TR>(
+			Func<T1, TR> case1 = null,
+			Func<T2, TR> case2 = null,
+			Func<T3, TR> case3 = null,
+			Func<T4, TR> case4 = null)
+		{
+			switch (tag)
+			{
+				case 0: return (case1 ?? (_ => default)).Invoke(value1);
+				case 1: return (case2 ?? (_ => default)).Invoke(value2);
+				case 2: return (case3 ?? (_ => default)).Invoke(value3);
+				case 3: return (case4 ?? (_ => default)).Invoke(value4);
 				default: throw new Exception("Unexpected match failure.");
 			}
 		}
@@ -330,6 +434,42 @@ namespace Sigma.Union2
 				case 2: return case3(value3);
 				case 3: return case4(value4);
 				case 4: return case5(value5);
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
+		public void PartialSwitch(
+			Action<T1> case1 = null,
+			Action<T2> case2 = null,
+			Action<T3> case3 = null,
+			Action<T4> case4 = null,
+			Action<T5> case5 = null)
+		{
+			switch (tag)
+			{
+				case 0: case1?.Invoke(value1); break;
+				case 1: case2?.Invoke(value2); break;
+				case 2: case3?.Invoke(value3); break;
+				case 3: case4?.Invoke(value4); break;
+				case 4: case5?.Invoke(value5); break;
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
+		public TR PartialMatch<TR>(
+			Func<T1, TR> case1 = null,
+			Func<T2, TR> case2 = null,
+			Func<T3, TR> case3 = null,
+			Func<T4, TR> case4 = null,
+			Func<T5, TR> case5 = null)
+		{
+			switch (tag)
+			{
+				case 0: return (case1 ?? (_ => default)).Invoke(value1);
+				case 1: return (case2 ?? (_ => default)).Invoke(value2);
+				case 2: return (case3 ?? (_ => default)).Invoke(value3);
+				case 3: return (case4 ?? (_ => default)).Invoke(value4);
+				case 4: return (case5 ?? (_ => default)).Invoke(value5);
 				default: throw new Exception("Unexpected match failure.");
 			}
 		}
@@ -439,6 +579,46 @@ namespace Sigma.Union2
 				case 3: return case4(value4);
 				case 4: return case5(value5);
 				case 5: return case6(value6);
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
+		public void PartialSwitch(
+			Action<T1> case1 = null,
+			Action<T2> case2 = null,
+			Action<T3> case3 = null,
+			Action<T4> case4 = null,
+			Action<T5> case5 = null,
+			Action<T6> case6 = null)
+		{
+			switch (tag)
+			{
+				case 0: case1?.Invoke(value1); break;
+				case 1: case2?.Invoke(value2); break;
+				case 2: case3?.Invoke(value3); break;
+				case 3: case4?.Invoke(value4); break;
+				case 4: case5?.Invoke(value5); break;
+				case 5: case6?.Invoke(value6); break;
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
+		public TR PartialMatch<TR>(
+			Func<T1, TR> case1 = null,
+			Func<T2, TR> case2 = null,
+			Func<T3, TR> case3 = null,
+			Func<T4, TR> case4 = null,
+			Func<T5, TR> case5 = null,
+			Func<T6, TR> case6 = null)
+		{
+			switch (tag)
+			{
+				case 0: return (case1 ?? (_ => default)).Invoke(value1);
+				case 1: return (case2 ?? (_ => default)).Invoke(value2);
+				case 2: return (case3 ?? (_ => default)).Invoke(value3);
+				case 3: return (case4 ?? (_ => default)).Invoke(value4);
+				case 4: return (case5 ?? (_ => default)).Invoke(value5);
+				case 5: return (case6 ?? (_ => default)).Invoke(value6);
 				default: throw new Exception("Unexpected match failure.");
 			}
 		}
@@ -562,6 +742,50 @@ namespace Sigma.Union2
 				case 4: return case5(value5);
 				case 5: return case6(value6);
 				case 6: return case7(value7);
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
+		public void PartialSwitch(
+			Action<T1> case1 = null,
+			Action<T2> case2 = null,
+			Action<T3> case3 = null,
+			Action<T4> case4 = null,
+			Action<T5> case5 = null,
+			Action<T6> case6 = null,
+			Action<T7> case7 = null)
+		{
+			switch (tag)
+			{
+				case 0: case1?.Invoke(value1); break;
+				case 1: case2?.Invoke(value2); break;
+				case 2: case3?.Invoke(value3); break;
+				case 3: case4?.Invoke(value4); break;
+				case 4: case5?.Invoke(value5); break;
+				case 5: case6?.Invoke(value6); break;
+				case 6: case7?.Invoke(value7); break;
+				default: throw new Exception("Unexpected match failure.");
+			}
+		}
+
+		public TR PartialMatch<TR>(
+			Func<T1, TR> case1 = null,
+			Func<T2, TR> case2 = null,
+			Func<T3, TR> case3 = null,
+			Func<T4, TR> case4 = null,
+			Func<T5, TR> case5 = null,
+			Func<T6, TR> case6 = null,
+			Func<T7, TR> case7 = null)
+		{
+			switch (tag)
+			{
+				case 0: return (case1 ?? (_ => default)).Invoke(value1);
+				case 1: return (case2 ?? (_ => default)).Invoke(value2);
+				case 2: return (case3 ?? (_ => default)).Invoke(value3);
+				case 3: return (case4 ?? (_ => default)).Invoke(value4);
+				case 4: return (case5 ?? (_ => default)).Invoke(value5);
+				case 5: return (case6 ?? (_ => default)).Invoke(value6);
+				case 6: return (case7 ?? (_ => default)).Invoke(value7);
 				default: throw new Exception("Unexpected match failure.");
 			}
 		}
