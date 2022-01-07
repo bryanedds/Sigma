@@ -1183,17 +1183,17 @@ namespace Sigma.Union2
 		private readonly T9 value9;
 	}
 
-	public static class Either
+	public static class Result
 	{
-		public static Either<TS, TF> Success<TS, TF>(TS success) => new Either<TS, TF>(success);
-		public static Either<TS, TF> Failure<TS, TF>(TF failure) => new Either<TS, TF>(failure, Overload2.Value);
-		public static Either<TR, TF> Select<TS, TF, TR>(this Either<TS, TF> eir, Func<TS, TR> selector) =>
-			eir.Match(
+		public static Result<TS, TF> Success<TS, TF>(TS success) => new Result<TS, TF>(success);
+		public static Result<TS, TF> Failure<TS, TF>(TF failure) => new Result<TS, TF>(failure, Overload2.Value);
+		public static Result<TR, TF> Select<TS, TF, TR>(this Result<TS, TF> result, Func<TS, TR> selector) =>
+			result.Match(
 				success => Success<TR, TF>(selector(success)),
 				failure => Failure<TR, TF>(failure));
 	}
 
-	public class Either<TS, TF> : Union<TS, TF>
+	public class Result<TS, TF> : Union<TS, TF>
 	{
 		public bool IsSuccess => IsT1;
 		public bool IsFailure => IsT2;
@@ -1201,8 +1201,8 @@ namespace Sigma.Union2
 		public TF ToFailure => ToT2;
 		public Option<TS> AsSuccess => AsT1;
 		public Option<TF> AsFailure => AsT2;
-		public Either(TS success) : base(success) { }
-		public Either(TF failure, Overload2 o = default) : base(failure, o) { }
+		public Result(TS success) : base(success) { }
+		public Result(TF failure, Overload2 o = default) : base(failure, o) { }
 	}
 
 	public static class Option
