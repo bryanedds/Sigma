@@ -96,6 +96,7 @@
     <Compile Include="SymbolicTests.cs" />
     <Compile Include="TimeRange.cs" />
     <Compile Include="Union.cs" />
+    <Compile Include="Union2.cs" />
     <Compile Include="Unit.cs" />
     <Compile Include="SigmaUtility.cs" />
     <Compile Include="SigmaMath.cs" />
