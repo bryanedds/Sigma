@@ -216,6 +216,7 @@ namespace Sigma
 		public Symbol(string text, Overload3 o = default) : base(text, o) { }
 		public Symbol(string quote, Overload4 o = default) : base(quote, o) { }
 		public Symbol(IEnumerable<Symbol> symbols, Overload5 o = default) : base(symbols.ToImmutableList(), o) { }
+		public Symbol(int tag, object valueObj) : base(tag, valueObj) { }
 		public static Symbol FromString(string str) => SymbolParser.ParseSymbol(str);
 		public string ToString(Symbol symbol) => SymbolParser.WriteSymbol(symbol);
 	}

@@ -89,11 +89,11 @@ namespace Sigma
 
 	public class Union<T1>
 	{
-		protected internal int Tag => tag;
-		protected internal object ValueObj => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected internal bool IsT1 => tag == 0;
-		protected internal T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected internal Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		public int Tag => tag;
+		public object ValueObj => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected bool IsT1 => tag == 0;
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -152,9 +152,9 @@ namespace Sigma
 
 	public class Union<T1, T2>
 	{
-		protected internal int Tag => tag;
+		public int Tag => tag;
 
-		protected internal object ValueObj
+		protected object ValueObj
 		{
 			get
 			{
@@ -167,14 +167,14 @@ namespace Sigma
 			}
 		}
 
-		protected internal bool IsT1 => tag == 0;
-		protected internal bool IsT2 => tag == 1;
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
 
-		protected internal T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected internal T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
 
-		protected internal Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected internal Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -253,9 +253,9 @@ namespace Sigma
 
 	public class Union<T1, T2, T3>
 	{
-		protected internal int Tag => tag;
+		public int Tag => tag;
 
-		protected internal object ValueObj
+		protected object ValueObj
 		{
 			get
 			{
@@ -269,17 +269,17 @@ namespace Sigma
 			}
 		}
 
-		protected internal bool IsT1 => tag == 0;
-		protected internal bool IsT2 => tag == 1;
-		protected internal bool IsT3 => tag == 2;
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
 
-		protected internal T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected internal T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected internal T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
 
-		protected internal Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected internal Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected internal Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -374,9 +374,9 @@ namespace Sigma
 
 	public class Union<T1, T2, T3, T4>
 	{
-		protected internal int Tag => tag;
+		public int Tag => tag;
 
-		protected internal object ValueObj
+		protected object ValueObj
 		{
 			get
 			{
@@ -391,20 +391,20 @@ namespace Sigma
 			}
 		}
 
-		protected internal bool IsT1 => tag == 0;
-		protected internal bool IsT2 => tag == 1;
-		protected internal bool IsT3 => tag == 2;
-		protected internal bool IsT4 => tag == 3;
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
+		protected bool IsT4 => tag == 3;
 
-		protected internal T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected internal T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected internal T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
-		protected internal T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
 
-		protected internal Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected internal Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected internal Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
-		protected internal Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -515,9 +515,9 @@ namespace Sigma
 
 	public class Union<T1, T2, T3, T4, T5>
 	{
-		protected internal int Tag => tag;
+		public int Tag => tag;
 
-		protected internal object ValueObj
+		protected object ValueObj
 		{
 			get
 			{
@@ -533,23 +533,23 @@ namespace Sigma
 			}
 		}
 
-		protected internal bool IsT1 => tag == 0;
-		protected internal bool IsT2 => tag == 1;
-		protected internal bool IsT3 => tag == 2;
-		protected internal bool IsT4 => tag == 3;
-		protected internal bool IsT5 => tag == 4;
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
+		protected bool IsT4 => tag == 3;
+		protected bool IsT5 => tag == 4;
 
-		protected internal T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected internal T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected internal T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
-		protected internal T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
-		protected internal T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
+		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
 
-		protected internal Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected internal Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected internal Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
-		protected internal Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
-		protected internal Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
+		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -676,9 +676,9 @@ namespace Sigma
 
 	public class Union<T1, T2, T3, T4, T5, T6>
 	{
-		protected internal int Tag => tag;
+		public int Tag => tag;
 
-		protected internal object ValueObj
+		protected object ValueObj
 		{
 			get
 			{
@@ -695,26 +695,26 @@ namespace Sigma
 			}
 		}
 
-		protected internal bool IsT1 => tag == 0;
-		protected internal bool IsT2 => tag == 1;
-		protected internal bool IsT3 => tag == 2;
-		protected internal bool IsT4 => tag == 3;
-		protected internal bool IsT5 => tag == 4;
-		protected internal bool IsT6 => tag == 5;
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
+		protected bool IsT4 => tag == 3;
+		protected bool IsT5 => tag == 4;
+		protected bool IsT6 => tag == 5;
 
-		protected internal T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected internal T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected internal T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
-		protected internal T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
-		protected internal T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
-		protected internal T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
+		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
+		protected T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
 
-		protected internal Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected internal Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected internal Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
-		protected internal Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
-		protected internal Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
-		protected internal Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
+		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
+		protected Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -857,9 +857,9 @@ namespace Sigma
 
 	public class Union<T1, T2, T3, T4, T5, T6, T7>
 	{
-		protected internal int Tag => tag;
+		public int Tag => tag;
 
-		protected internal object ValueObj
+		protected object ValueObj
 		{
 			get
 			{
@@ -877,29 +877,29 @@ namespace Sigma
 			}
 		}
 
-		protected internal bool IsT1 => tag == 0;
-		protected internal bool IsT2 => tag == 1;
-		protected internal bool IsT3 => tag == 2;
-		protected internal bool IsT4 => tag == 3;
-		protected internal bool IsT5 => tag == 4;
-		protected internal bool IsT6 => tag == 5;
-		protected internal bool IsT7 => tag == 6;
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
+		protected bool IsT4 => tag == 3;
+		protected bool IsT5 => tag == 4;
+		protected bool IsT6 => tag == 5;
+		protected bool IsT7 => tag == 6;
 
-		protected internal T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected internal T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected internal T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
-		protected internal T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
-		protected internal T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
-		protected internal T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
-		protected internal T7 ToT7 => tag == 6 ? value7 : throw new InvalidOperationException();
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
+		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
+		protected T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
+		protected T7 ToT7 => tag == 6 ? value7 : throw new InvalidOperationException();
 
-		protected internal Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected internal Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected internal Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
-		protected internal Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
-		protected internal Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
-		protected internal Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
-		protected internal Option<T7> TryT7 => tag == 6 ? Option.Some(value7) : Option.None<T7>();
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
+		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
+		protected Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
+		protected Option<T7> TryT7 => tag == 6 ? Option.Some(value7) : Option.None<T7>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -1058,9 +1058,9 @@ namespace Sigma
 
 	public class Union<T1, T2, T3, T4, T5, T6, T7, T8>
 	{
-		protected internal int Tag => tag;
+		public int Tag => tag;
 
-		protected internal object ValueObj
+		protected object ValueObj
 		{
 			get
 			{
@@ -1079,32 +1079,32 @@ namespace Sigma
 			}
 		}
 
-		protected internal bool IsT1 => tag == 0;
-		protected internal bool IsT2 => tag == 1;
-		protected internal bool IsT3 => tag == 2;
-		protected internal bool IsT4 => tag == 3;
-		protected internal bool IsT5 => tag == 4;
-		protected internal bool IsT6 => tag == 5;
-		protected internal bool IsT7 => tag == 6;
-		protected internal bool IsT8 => tag == 7;
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
+		protected bool IsT4 => tag == 3;
+		protected bool IsT5 => tag == 4;
+		protected bool IsT6 => tag == 5;
+		protected bool IsT7 => tag == 6;
+		protected bool IsT8 => tag == 7;
 
-		protected internal T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected internal T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected internal T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
-		protected internal T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
-		protected internal T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
-		protected internal T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
-		protected internal T7 ToT7 => tag == 6 ? value7 : throw new InvalidOperationException();
-		protected internal T8 ToT8 => tag == 7 ? value8 : throw new InvalidOperationException();
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
+		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
+		protected T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
+		protected T7 ToT7 => tag == 6 ? value7 : throw new InvalidOperationException();
+		protected T8 ToT8 => tag == 7 ? value8 : throw new InvalidOperationException();
 
-		protected internal Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected internal Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected internal Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
-		protected internal Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
-		protected internal Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
-		protected internal Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
-		protected internal Option<T7> TryT7 => tag == 6 ? Option.Some(value7) : Option.None<T7>();
-		protected internal Option<T8> TryT8 => tag == 7 ? Option.Some(value8) : Option.None<T8>();
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
+		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
+		protected Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
+		protected Option<T7> TryT7 => tag == 6 ? Option.Some(value7) : Option.None<T7>();
+		protected Option<T8> TryT8 => tag == 7 ? Option.Some(value8) : Option.None<T8>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -1279,9 +1279,9 @@ namespace Sigma
 
 	public class Union<T1, T2, T3, T4, T5, T6, T7, T8, T9>
 	{
-		protected internal int Tag => tag;
+		public int Tag => tag;
 
-		protected internal object ValueObj
+		public object ValueObj
 		{
 			get
 			{
@@ -1301,35 +1301,35 @@ namespace Sigma
 			}
 		}
 
-		protected internal bool IsT1 => tag == 0;
-		protected internal bool IsT2 => tag == 1;
-		protected internal bool IsT3 => tag == 2;
-		protected internal bool IsT4 => tag == 3;
-		protected internal bool IsT5 => tag == 4;
-		protected internal bool IsT6 => tag == 5;
-		protected internal bool IsT7 => tag == 6;
-		protected internal bool IsT8 => tag == 7;
-		protected internal bool IsT9 => tag == 8;
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
+		protected bool IsT4 => tag == 3;
+		protected bool IsT5 => tag == 4;
+		protected bool IsT6 => tag == 5;
+		protected bool IsT7 => tag == 6;
+		protected bool IsT8 => tag == 7;
+		protected bool IsT9 => tag == 8;
 
-		protected internal T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected internal T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected internal T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
-		protected internal T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
-		protected internal T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
-		protected internal T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
-		protected internal T7 ToT7 => tag == 6 ? value7 : throw new InvalidOperationException();
-		protected internal T8 ToT8 => tag == 7 ? value8 : throw new InvalidOperationException();
-		protected internal T9 ToT9 => tag == 8 ? value9 : throw new InvalidOperationException();
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
+		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
+		protected T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
+		protected T7 ToT7 => tag == 6 ? value7 : throw new InvalidOperationException();
+		protected T8 ToT8 => tag == 7 ? value8 : throw new InvalidOperationException();
+		protected T9 ToT9 => tag == 8 ? value9 : throw new InvalidOperationException();
 
-		protected internal Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected internal Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected internal Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
-		protected internal Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
-		protected internal Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
-		protected internal Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
-		protected internal Option<T7> TryT7 => tag == 6 ? Option.Some(value7) : Option.None<T7>();
-		protected internal Option<T8> TryT8 => tag == 7 ? Option.Some(value8) : Option.None<T8>();
-		protected internal Option<T9> TryT9 => tag == 8 ? Option.Some(value9) : Option.None<T9>();
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
+		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
+		protected Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
+		protected Option<T7> TryT7 => tag == 6 ? Option.Some(value7) : Option.None<T7>();
+		protected Option<T8> TryT8 => tag == 7 ? Option.Some(value8) : Option.None<T8>();
+		protected Option<T9> TryT9 => tag == 8 ? Option.Some(value9) : Option.None<T9>();
 
 		public Union(int tag, object valueObj)
 		{
