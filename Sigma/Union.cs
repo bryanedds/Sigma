@@ -35,19 +35,17 @@ namespace Sigma
 				var symbol = (Symbol)value;
 				try
 				{
+					// convert from symbol to union
 					var fields = symbol.ToSymbols;
-					var tagField = pointType.GetField(nameof(Union<bool, bool>.Tag));
-					var tagConverter = new SymbolicConverter(tagField.FieldType);
-					var tag = (Enum)tagConverter.ConvertFromString(fields[0].ToAtom);
-					var dataField = pointType.GetField(nameof(Union<bool, bool>.Data));
-					var dataConverter = new SymbolicConverter(tag.TryGetAttributeOfType<UnionAttribute>().TryThen(attr => attr.Type) ?? dataField.FieldType);
+					var valType = symbol.GetType().GetGenericArguments()[symbol.Tag];
+					var valConverter = new SymbolicConverter(valType);
 					var data = fields[1].Match(
-						atom => dataConverter.ConvertFromString(atom),
-						number => dataConverter.ConvertFromString(number),
-						str => dataConverter.ConvertFromString(SymbolParser.Explicitize(str)),
+						atom => valConverter.ConvertFromString(atom),
+						number => valConverter.ConvertFromString(number),
+						str => valConverter.ConvertFromString(SymbolParser.Explicitize(str)),
 						_ => fields[1],
-						_ => dataConverter.ConvertFrom(fields[1]));
-					return Activator.CreateInstance(pointType, new object[] { tag, data });
+						_ => valConverter.ConvertFrom(fields[1]));
+					return Activator.CreateInstance(pointType, new object[] { symbol.Tag, data });
 				}
 				catch (Exception exn)
 				{
@@ -71,11 +69,12 @@ namespace Sigma
 			if (destinationType == typeof(string)) return ConvertTo(context, culture, value, typeof(Symbol)).ToString();
 			if (destinationType == typeof(Symbol))
 			{
-				var tagField = pointType.GetField(nameof(Union<bool, bool>.Tag));
+				// convert from union to symbol
+				var tagField = pointType.GetField(nameof(Union<Unit>.Tag));
 				var tag = (Enum)tagField.GetValue(value);
 				var tagConverter = new SymbolicConverter(tagField.FieldType);
 				var tagSymbol = new Symbol(tagConverter.ConvertToString(tag));
-				var dataField = pointType.GetField(nameof(Union<bool, bool>.Data));
+				var dataField = pointType.GetField(nameof(Union<Unit>.ValueObj));
 				var data = dataField.GetValue(value);
 				var dataConverter = new SymbolicConverter(tag.TryGetAttributeOfType<UnionAttribute>().TryThen(attr => attr.Type) ?? dataField.FieldType);
 				var dataSymbol = dataConverter.CanConvertTo(typeof(Symbol)) ? (Symbol)dataConverter.ConvertTo(data, typeof(Symbol)) : new Symbol(dataConverter.ConvertToString(data));
@@ -91,9 +90,6 @@ namespace Sigma
 	{
 		public int Tag => tag;
 		public object ValueObj => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected bool IsT1 => tag == 0;
-		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -146,6 +142,10 @@ namespace Sigma
 			}
 		}
 
+		protected bool IsT1 => tag == 0;
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+
 		private readonly int tag;
 		private readonly T1 value1;
 	}
@@ -154,7 +154,7 @@ namespace Sigma
 	{
 		public int Tag => tag;
 
-		protected object ValueObj
+		public object ValueObj
 		{
 			get
 			{
@@ -166,15 +166,6 @@ namespace Sigma
 				}
 			}
 		}
-
-		protected bool IsT1 => tag == 0;
-		protected bool IsT2 => tag == 1;
-
-		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-
-		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -246,6 +237,15 @@ namespace Sigma
 			}
 		}
 
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+
 		private readonly int tag;
 		private readonly T1 value1;
 		private readonly T2 value2;
@@ -255,7 +255,7 @@ namespace Sigma
 	{
 		public int Tag => tag;
 
-		protected object ValueObj
+		public object ValueObj
 		{
 			get
 			{
@@ -268,18 +268,6 @@ namespace Sigma
 				}
 			}
 		}
-
-		protected bool IsT1 => tag == 0;
-		protected bool IsT2 => tag == 1;
-		protected bool IsT3 => tag == 2;
-
-		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
-
-		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -366,6 +354,18 @@ namespace Sigma
 			}
 		}
 
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
+
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+
 		private readonly int tag;
 		private readonly T1 value1;
 		private readonly T2 value2;
@@ -376,7 +376,7 @@ namespace Sigma
 	{
 		public int Tag => tag;
 
-		protected object ValueObj
+		public object ValueObj
 		{
 			get
 			{
@@ -390,21 +390,6 @@ namespace Sigma
 				}
 			}
 		}
-
-		protected bool IsT1 => tag == 0;
-		protected bool IsT2 => tag == 1;
-		protected bool IsT3 => tag == 2;
-		protected bool IsT4 => tag == 3;
-
-		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
-		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
-
-		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
-		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -506,6 +491,21 @@ namespace Sigma
 			}
 		}
 
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
+		protected bool IsT4 => tag == 3;
+
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
+
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
+
 		private readonly int tag;
 		private readonly T1 value1;
 		private readonly T2 value2;
@@ -517,7 +517,7 @@ namespace Sigma
 	{
 		public int Tag => tag;
 
-		protected object ValueObj
+		public object ValueObj
 		{
 			get
 			{
@@ -532,24 +532,6 @@ namespace Sigma
 				}
 			}
 		}
-
-		protected bool IsT1 => tag == 0;
-		protected bool IsT2 => tag == 1;
-		protected bool IsT3 => tag == 2;
-		protected bool IsT4 => tag == 3;
-		protected bool IsT5 => tag == 4;
-
-		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
-		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
-		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
-
-		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
-		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
-		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -666,6 +648,24 @@ namespace Sigma
 			}
 		}
 
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
+		protected bool IsT4 => tag == 3;
+		protected bool IsT5 => tag == 4;
+
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
+		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
+
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
+		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
+
 		private readonly int tag;
 		private readonly T1 value1;
 		private readonly T2 value2;
@@ -678,7 +678,7 @@ namespace Sigma
 	{
 		public int Tag => tag;
 
-		protected object ValueObj
+		public object ValueObj
 		{
 			get
 			{
@@ -694,27 +694,6 @@ namespace Sigma
 				}
 			}
 		}
-
-		protected bool IsT1 => tag == 0;
-		protected bool IsT2 => tag == 1;
-		protected bool IsT3 => tag == 2;
-		protected bool IsT4 => tag == 3;
-		protected bool IsT5 => tag == 4;
-		protected bool IsT6 => tag == 5;
-
-		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
-		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
-		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
-		protected T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
-
-		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
-		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
-		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
-		protected Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -846,6 +825,27 @@ namespace Sigma
 			}
 		}
 
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
+		protected bool IsT4 => tag == 3;
+		protected bool IsT5 => tag == 4;
+		protected bool IsT6 => tag == 5;
+
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
+		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
+		protected T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
+
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
+		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
+		protected Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
+
 		private readonly int tag;
 		private readonly T1 value1;
 		private readonly T2 value2;
@@ -859,7 +859,7 @@ namespace Sigma
 	{
 		public int Tag => tag;
 
-		protected object ValueObj
+		public object ValueObj
 		{
 			get
 			{
@@ -876,30 +876,6 @@ namespace Sigma
 				}
 			}
 		}
-
-		protected bool IsT1 => tag == 0;
-		protected bool IsT2 => tag == 1;
-		protected bool IsT3 => tag == 2;
-		protected bool IsT4 => tag == 3;
-		protected bool IsT5 => tag == 4;
-		protected bool IsT6 => tag == 5;
-		protected bool IsT7 => tag == 6;
-
-		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
-		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
-		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
-		protected T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
-		protected T7 ToT7 => tag == 6 ? value7 : throw new InvalidOperationException();
-
-		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
-		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
-		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
-		protected Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
-		protected Option<T7> TryT7 => tag == 6 ? Option.Some(value7) : Option.None<T7>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -1046,6 +1022,30 @@ namespace Sigma
 			}
 		}
 
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
+		protected bool IsT4 => tag == 3;
+		protected bool IsT5 => tag == 4;
+		protected bool IsT6 => tag == 5;
+		protected bool IsT7 => tag == 6;
+
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
+		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
+		protected T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
+		protected T7 ToT7 => tag == 6 ? value7 : throw new InvalidOperationException();
+
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
+		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
+		protected Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
+		protected Option<T7> TryT7 => tag == 6 ? Option.Some(value7) : Option.None<T7>();
+
 		private readonly int tag;
 		private readonly T1 value1;
 		private readonly T2 value2;
@@ -1060,7 +1060,7 @@ namespace Sigma
 	{
 		public int Tag => tag;
 
-		protected object ValueObj
+		public object ValueObj
 		{
 			get
 			{
@@ -1078,33 +1078,6 @@ namespace Sigma
 				}
 			}
 		}
-
-		protected bool IsT1 => tag == 0;
-		protected bool IsT2 => tag == 1;
-		protected bool IsT3 => tag == 2;
-		protected bool IsT4 => tag == 3;
-		protected bool IsT5 => tag == 4;
-		protected bool IsT6 => tag == 5;
-		protected bool IsT7 => tag == 6;
-		protected bool IsT8 => tag == 7;
-
-		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
-		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
-		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
-		protected T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
-		protected T7 ToT7 => tag == 6 ? value7 : throw new InvalidOperationException();
-		protected T8 ToT8 => tag == 7 ? value8 : throw new InvalidOperationException();
-
-		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
-		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
-		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
-		protected Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
-		protected Option<T7> TryT7 => tag == 6 ? Option.Some(value7) : Option.None<T7>();
-		protected Option<T8> TryT8 => tag == 7 ? Option.Some(value8) : Option.None<T8>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -1266,6 +1239,33 @@ namespace Sigma
 			}
 		}
 
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
+		protected bool IsT4 => tag == 3;
+		protected bool IsT5 => tag == 4;
+		protected bool IsT6 => tag == 5;
+		protected bool IsT7 => tag == 6;
+		protected bool IsT8 => tag == 7;
+
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
+		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
+		protected T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
+		protected T7 ToT7 => tag == 6 ? value7 : throw new InvalidOperationException();
+		protected T8 ToT8 => tag == 7 ? value8 : throw new InvalidOperationException();
+
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
+		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
+		protected Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
+		protected Option<T7> TryT7 => tag == 6 ? Option.Some(value7) : Option.None<T7>();
+		protected Option<T8> TryT8 => tag == 7 ? Option.Some(value8) : Option.None<T8>();
+
 		private readonly int tag;
 		private readonly T1 value1;
 		private readonly T2 value2;
@@ -1300,36 +1300,6 @@ namespace Sigma
 				}
 			}
 		}
-
-		protected bool IsT1 => tag == 0;
-		protected bool IsT2 => tag == 1;
-		protected bool IsT3 => tag == 2;
-		protected bool IsT4 => tag == 3;
-		protected bool IsT5 => tag == 4;
-		protected bool IsT6 => tag == 5;
-		protected bool IsT7 => tag == 6;
-		protected bool IsT8 => tag == 7;
-		protected bool IsT9 => tag == 8;
-
-		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
-		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
-		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
-		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
-		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
-		protected T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
-		protected T7 ToT7 => tag == 6 ? value7 : throw new InvalidOperationException();
-		protected T8 ToT8 => tag == 7 ? value8 : throw new InvalidOperationException();
-		protected T9 ToT9 => tag == 8 ? value9 : throw new InvalidOperationException();
-
-		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
-		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
-		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
-		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
-		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
-		protected Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
-		protected Option<T7> TryT7 => tag == 6 ? Option.Some(value7) : Option.None<T7>();
-		protected Option<T8> TryT8 => tag == 7 ? Option.Some(value8) : Option.None<T8>();
-		protected Option<T9> TryT9 => tag == 8 ? Option.Some(value9) : Option.None<T9>();
 
 		public Union(int tag, object valueObj)
 		{
@@ -1506,6 +1476,36 @@ namespace Sigma
 			}
 		}
 
+		protected bool IsT1 => tag == 0;
+		protected bool IsT2 => tag == 1;
+		protected bool IsT3 => tag == 2;
+		protected bool IsT4 => tag == 3;
+		protected bool IsT5 => tag == 4;
+		protected bool IsT6 => tag == 5;
+		protected bool IsT7 => tag == 6;
+		protected bool IsT8 => tag == 7;
+		protected bool IsT9 => tag == 8;
+
+		protected T1 ToT1 => tag == 0 ? value1 : throw new InvalidOperationException();
+		protected T2 ToT2 => tag == 1 ? value2 : throw new InvalidOperationException();
+		protected T3 ToT3 => tag == 2 ? value3 : throw new InvalidOperationException();
+		protected T4 ToT4 => tag == 3 ? value4 : throw new InvalidOperationException();
+		protected T5 ToT5 => tag == 4 ? value5 : throw new InvalidOperationException();
+		protected T6 ToT6 => tag == 5 ? value6 : throw new InvalidOperationException();
+		protected T7 ToT7 => tag == 6 ? value7 : throw new InvalidOperationException();
+		protected T8 ToT8 => tag == 7 ? value8 : throw new InvalidOperationException();
+		protected T9 ToT9 => tag == 8 ? value9 : throw new InvalidOperationException();
+
+		protected Option<T1> TryT1 => tag == 0 ? Option.Some(value1) : Option.None<T1>();
+		protected Option<T2> TryT2 => tag == 1 ? Option.Some(value2) : Option.None<T2>();
+		protected Option<T3> TryT3 => tag == 2 ? Option.Some(value3) : Option.None<T3>();
+		protected Option<T4> TryT4 => tag == 3 ? Option.Some(value4) : Option.None<T4>();
+		protected Option<T5> TryT5 => tag == 4 ? Option.Some(value5) : Option.None<T5>();
+		protected Option<T6> TryT6 => tag == 5 ? Option.Some(value6) : Option.None<T6>();
+		protected Option<T7> TryT7 => tag == 6 ? Option.Some(value7) : Option.None<T7>();
+		protected Option<T8> TryT8 => tag == 7 ? Option.Some(value8) : Option.None<T8>();
+		protected Option<T9> TryT9 => tag == 8 ? Option.Some(value9) : Option.None<T9>();
+
 		private readonly int tag;
 		private readonly T1 value1;
 		private readonly T2 value2;
@@ -1574,6 +1574,45 @@ namespace Sigma
 		public T Value => ToT1;
 		public Option(T value) : base(value, Overload1.Value) { }
 		public Option() : base(Unit.Value, Overload2.Value) { }
+	}
+
+	public static class Choice
+	{
+		public static Choice<T1, T2> T1Of2<T1, T2>(T1 value1) => new Choice<T1, T2>(value1, Overload1.Value);
+		public static Choice<T1, T2> T2Of2<T1, T2>(T2 value2) => new Choice<T1, T2>(value2, Overload2.Value);
+		public static Choice<T1, T2, T3> T1Of3<T1, T2, T3>(T1 value1) => new Choice<T1, T2, T3>(value1, Overload1.Value);
+		public static Choice<T1, T2, T3> T2Of3<T1, T2, T3>(T2 value2) => new Choice<T1, T2, T3>(value2, Overload2.Value);
+		public static Choice<T1, T2, T3> T3Of3<T1, T2, T3>(T3 value3) => new Choice<T1, T2, T3>(value3, Overload3.Value);
+	}
+
+	public class Choice<T1, T2> : Union<T1, T2>
+	{
+		public new bool IsT1 => IsT1;
+		public new bool IsT2 => IsT2;
+		public new T1 ToT1 => ToT1;
+		public new T2 ToT2 => ToT2;
+		public new Option<T1> TryT1 => TryT1;
+		public new Option<T2> TryT2 => TryT2;
+		public Choice(T1 value1, Overload1 o = default) : base(value1, o) { }
+		public Choice(T2 value2, Overload2 o = default) : base(value2, o) { }
+		public Choice(int tag, object valueObj) : base(tag, valueObj) { }
+	}
+
+	public class Choice<T1, T2, T3> : Union<T1, T2, T3>
+	{
+		public new bool IsT1 => IsT1;
+		public new bool IsT2 => IsT2;
+		public new bool IsT3 => IsT3;
+		public new T1 ToT1 => ToT1;
+		public new T2 ToT2 => ToT2;
+		public new T3 ToT3 => ToT3;
+		public new Option<T1> TryT1 => TryT1;
+		public new Option<T2> TryT2 => TryT2;
+		public new Option<T3> TryT3 => TryT3;
+		public Choice(T1 value1, Overload1 o = default) : base(value1, o) { }
+		public Choice(T2 value2, Overload2 o = default) : base(value2, o) { }
+		public Choice(T3 value3, Overload3 o = default) : base(value3, o) { }
+		public Choice(int tag, object valueObj) : base(tag, valueObj) { }
 	}
 
 	public struct Overload1
