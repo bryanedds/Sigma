@@ -2,29 +2,6 @@
 
 namespace Sigma.Tests
 {
-    public class TestRecord : Record<int, Ref<string>>
-    {
-        public TestRecord(int i, Ref<string> s) : base(i, s) { }
-    }
-
-    public class TestRecordRecord : Record<int, TestRecord>
-    {
-        public TestRecordRecord(int i, TestRecord t) : base(i, t) { }
-    }
-
-    public class TestUnion : Union<TestUnionTag, object>
-    {
-        public TestUnion(int i) : base(TestUnionTag.Int, i) { }
-        public TestUnion(string s) : base(TestUnionTag.String, s) { }
-        public TestUnion(TestUnionTag t, object o) : base(t, o) { }
-    }
-
-    public enum TestUnionTag
-    {
-        [Union(typeof(int))] Int = 0,
-        [Union(typeof(string))] String
-    }
-
     public class SymbolTests
     {
         [Fact]
@@ -47,20 +24,6 @@ namespace Sigma.Tests
             Assert.Equal(Conversion.StringToValue<string>(" "), " ");
             Assert.Equal(Conversion.StringToValue<string>("String"), "String");
             Assert.Equal(Conversion.StringToValue<Ref<string>>("String"), new Ref<string>("String"));
-        }
-
-        [Fact]
-        public void RecordSerializationWorks()
-        {
-            Assert.Equal(Conversion.ValueToString(new TestRecord(0, new Ref<string>(""))), "[0 \"\"]");
-            Assert.Equal(Conversion.ValueToString(new TestRecordRecord(0, new TestRecord(0, new Ref<string>("")))), "[0 [0 \"\"]]");
-        }
-
-        [Fact]
-        public void RecordDeserializationWorks()
-        {
-            Assert.True(Conversion.StringToValue<TestRecord>("[0 \"\"]").Equals(new TestRecord(0, new Ref<string>(""))));
-            Assert.True(Conversion.StringToValue<TestRecordRecord>("[0 [0 \"\"]]").Equals(new TestRecordRecord(0, new TestRecord(0, new Ref<string>("")))));
         }
 
         [Fact]

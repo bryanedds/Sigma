@@ -59,11 +59,11 @@ namespace Sigma
                 var symbol = (Symbol)value;
                 try
                 {
-                    var symbols = symbol.AsSymbols;
-                    var flagsSymbol = symbols[0].AsAtom;
+                    var symbols = symbol.ToSymbols;
+                    var flagsSymbol = symbols[0].ToAtom;
                     var flags = bool.Parse(flagsSymbol);
-                    var entrySymbols = symbols[1].AsSymbols;
-                    var entries = entrySymbols.Select(entry => entry.AsSymbols.Then(fields => KeyValuePair.Create(fields[0].AsAtom, bool.Parse(fields[1].AsAtom))));
+                    var entrySymbols = symbols[1].ToSymbols;
+                    var entries = entrySymbols.Select(entry => entry.ToSymbols.Then(fields => KeyValuePair.Create(fields[0].ToAtom, bool.Parse(fields[1].TryAtom))));
                     return new DynamicEnum(flags, entries);
                 }
                 catch (Exception exn)

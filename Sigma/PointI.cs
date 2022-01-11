@@ -66,8 +66,8 @@ namespace Sigma
                 var symbol = (Symbol)value;
                 try
                 {
-                    var fields = symbol.AsSymbols;
-                    var ints = fields.Select(field => int.Parse(field.AsNumber)).ToArray();
+                    var fields = symbol.ToSymbols;
+                    var ints = fields.Select(field => int.Parse(field.ToNumber)).ToArray();
                     return new PointI(ints[0], ints[0]);
                 }
                 catch (Exception exn)
