@@ -7,8 +7,6 @@ using Sprache;
 
 namespace Sigma
 {
-
-
 	/// <summary>
 	/// Convert strings and symbols, with the following parses:
 	/// 
